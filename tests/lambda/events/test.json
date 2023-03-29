@@ -1,0 +1,36 @@
+{
+  "version": "2.0",
+  "routeKey": "$default",
+  "rawPath": "/prod/api/test",
+  "rawQueryString": "",
+  "headers": {
+    "content-length": "0",
+    "host": "dgxxw0lydb.execute-api.us-east-1.amazonaws.com",
+    "user-agent": "Amazon CloudFront",
+    "via": "2.0 13d3731e042da4eb724047055086bf24.cloudfront.net (CloudFront)",
+    "x-amz-cf-id": "WZtcuF2raebebLlUQWWMdz7Roi4HiVwb-9Vkf_iqX_WR-puyQucnAg==",
+    "x-amzn-trace-id": "Root=1-64123e98-378843ab7c875e90111f2624",
+    "x-forwarded-for": "108.26.206.128, 64.252.68.251",
+    "x-forwarded-port": "443",
+    "x-forwarded-proto": "https"
+  },
+  "requestContext": {
+    "accountId": "848023796141",
+    "apiId": "dgxxw0lydb",
+    "domainName": "dgxxw0lydb.execute-api.us-east-1.amazonaws.com",
+    "domainPrefix": "dgxxw0lydb",
+    "http": {
+      "method": "GET",
+      "path": "/prod/api/test",
+      "protocol": "HTTP/1.1",
+      "sourceIp": "108.26.206.128",
+      "userAgent": "Amazon CloudFront"
+    },
+    "requestId": "B1631hDzIAMEP0g=",
+    "routeKey": "$default",
+    "stage": "prod",
+    "time": "15/Mar/2023:21:54:32 +0000",
+    "timeEpoch": 1678917272291
+  },
+  "isBase64Encoded": false
+}

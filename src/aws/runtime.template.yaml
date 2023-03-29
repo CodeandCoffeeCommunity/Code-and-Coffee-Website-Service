@@ -1,0 +1,191 @@
+# This Cloud Formation template is used for runtime infrastructure
+AWSTemplateFormatVersion: 2010-09-09
+Description: Code and Coffee Service
+Parameters:
+  LambdaKey:
+    Type: String
+    Description: The key of the lambda package in the deploy bucket.
+  LambdaRoleArn:
+    Type: String
+    Description: The ARN of the role to use for the lambda function.
+  AcmCertificateArn:
+    Type: String
+    Description: The ARN of the ACM certificate to use for the Cloudfront Distribution.
+  RandomSeed:
+    Type: String
+    Description: A random seed to use for generating unique names.
+Resources:
+  WebResourcesBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub code-and-coffee-service-web-resources-${RandomSeed}
+      Tags:
+        - Key: app
+          Value: code-and-coffee-service
+      CorsConfiguration:
+        CorsRules:
+          - AllowedOrigins:
+              - "*"
+            AllowedHeaders:
+              - "*"
+            AllowedMethods:
+              - GET
+  WebResourcesBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    DeletionPolicy: Delete
+    Properties:
+      Bucket: !Sub code-and-coffee-service-web-resources-${RandomSeed}
+      PolicyDocument:
+        Statement:
+          - Sid: PublicReadGetObject
+            Effect: Allow
+            Principal: "*"
+            Action: "s3:GetObject"
+            Resource: !Sub arn:aws:s3:::code-and-coffee-service-web-resources-${RandomSeed}/*
+  LambdaFunction:
+    Type: "AWS::Lambda::Function"
+    Properties:
+      Tags:
+        - Key: app
+          Value: code-and-coffee-service
+      Code:
+        S3Bucket: !Sub code-and-coffee-service-deploy-${RandomSeed}
+        S3Key: !Ref LambdaKey
+      Handler: lambda-package/bundle.handler
+      MemorySize: 128
+      Role: !Ref LambdaRoleArn
+      Runtime: nodejs14.x
+      Timeout: 10
+  LambdaFunctionLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/lambda/code-and-coffee-service-${RandomSeed}
+      RetentionInDays: 14
+  LambdaFunctionPermissionApiGateway:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction"
+      FunctionName: !Ref LambdaFunction
+      Principal: "apigateway.amazonaws.com"
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGatewayApi}/*/$default
+  ApiGatewayApi:
+    Type: "AWS::ApiGatewayV2::Api"
+    Properties:
+      Tags:
+        app: code-and-coffee-service
+      Name: Code and Coffee Service
+      ProtocolType: HTTP
+      Description: API for the Code and Coffee Service
+      CorsConfiguration:
+        AllowOrigins:
+          - "*"
+        AllowHeaders:
+          - "*"
+        AllowMethods:
+          - GET
+  ApiGatewayApiStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId: !Ref ApiGatewayApi
+      StageName: prod
+      AutoDeploy: true
+      AccessLogSettings:
+        DestinationArn: !GetAtt ApiGatewayLogGroup.Arn
+        Format: '{"requestTime":"$context.requestTime","requestId":"$context.requestId","httpMethod":"$context.httpMethod","path":"$context.path","routeKey":"$context.routeKey","status","$context.status"}'
+    DependsOn:
+      - ApiGatewayApi
+  ApiGatewayApiIntegration:
+    Type: "AWS::ApiGatewayV2::Integration"
+    Properties:
+      ApiId: !Ref ApiGatewayApi
+      IntegrationType: AWS_PROXY
+      PayloadFormatVersion: "2.0"
+      IntegrationUri: !Sub arn:${AWS::Partition}:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaFunction.Arn}/invocations
+    DependsOn:
+      - ApiGatewayApi
+      - LambdaFunction
+  ApiGatewayApiRoute:
+    Type: "AWS::ApiGatewayV2::Route"
+    Properties:
+      ApiId: !Ref ApiGatewayApi
+      RouteKey: "$default"
+      Target: !Join
+        - /
+        - - integrations
+          - !Ref ApiGatewayApiIntegration
+    DependsOn:
+      - ApiGatewayApiIntegration
+      - ApiGatewayApi
+  ApiGatewayLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: /aws/apigateway/code-and-coffee-service
+      RetentionInDays: 14
+  CloudFrontDistribution:
+    Type: "AWS::CloudFront::Distribution"
+    Properties:
+      Tags:
+        - Key: app
+          Value: code-and-coffee-service
+      DistributionConfig:
+        Comment: Code and Coffee Service
+        Origins:
+          - DomainName: !Sub "${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com"
+            Id: api-gateway
+            CustomOriginConfig:
+              HTTPPort: 80
+              HTTPSPort: 443
+              OriginProtocolPolicy: https-only
+            OriginPath: "/prod"
+          - Id: s3-origin
+            DomainName: !GetAtt WebResourcesBucket.DomainName
+            S3OriginConfig:
+              OriginAccessIdentity: ""
+        DefaultCacheBehavior:
+          ForwardedValues:
+            QueryString: false
+          TargetOriginId: s3-origin
+          ViewerProtocolPolicy: redirect-to-https
+          CachePolicyId: !Ref CloudFrontCachePolicy
+        Enabled: true
+        HttpVersion: http2
+        ViewerCertificate:
+          AcmCertificateArn: !Ref AcmCertificateArn
+          SslSupportMethod: sni-only
+          MinimumProtocolVersion: TLSv1.2_2021
+        CacheBehaviors:
+          - PathPattern: /api/*
+            TargetOriginId: api-gateway
+            CachePolicyId: !Ref CloudFrontCachePolicy
+            ForwardedValues:
+              QueryString: false
+              Cookies:
+                Forward: none
+            ViewerProtocolPolicy: redirect-to-https
+            AllowedMethods:
+              - GET
+              - HEAD
+              - OPTIONS
+            CachedMethods:
+              - GET
+              - HEAD
+
+    DependsOn:
+      - ApiGatewayApi
+  CloudFrontCachePolicy:
+    Type: AWS::CloudFront::CachePolicy
+    Properties:
+      CachePolicyConfig:
+        MinTTL: 300
+        DefaultTTL: 300
+        MaxTTL: 300
+        Name: "CodeAndCoffeeServiceCachePolicy"
+        ParametersInCacheKeyAndForwardedToOrigin:
+          CookiesConfig:
+            CookieBehavior: none
+          EnableAcceptEncodingBrotli: true
+          EnableAcceptEncodingGzip: true
+          HeadersConfig:
+            HeaderBehavior: none
+          QueryStringsConfig:
+            QueryStringBehavior: none

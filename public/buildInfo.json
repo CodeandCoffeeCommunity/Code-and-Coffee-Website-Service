@@ -1,0 +1,6 @@
+{
+  "buildNumber": "##BUILD_NUMBER##",
+  "buildDate": "##BUILD_DATE##",
+  "sha": "##SHA##",
+  "ref": "##REF##"
+}

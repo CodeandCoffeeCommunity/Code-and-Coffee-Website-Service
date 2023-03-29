@@ -1,0 +1,16 @@
+# This Cloud Formation template is used for deployment infrastructure
+AWSTemplateFormatVersion: 2010-09-09
+Description: Code and Coffee Service Deployment Infrastructure
+Parameters:
+  RandomSeed:
+    Type: String
+    Description: A random seed to use for generating unique names.
+Resources:
+  WebResourcesBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Delete
+    Properties:
+      BucketName: !Sub code-and-coffee-service-deploy-${RandomSeed}
+      Tags:
+        - Key: app
+          Value: code-and-coffee-service
