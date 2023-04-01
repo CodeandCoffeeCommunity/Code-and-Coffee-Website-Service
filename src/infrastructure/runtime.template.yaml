@@ -14,14 +14,14 @@ Parameters:
   RandomSeed:
     Type: String
     Description: A random seed to use for generating unique names.
+  Environment:
+    Type: String
+    Description: The name of the environment.
 Resources:
   WebResourcesBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub code-and-coffee-service-web-resources-${RandomSeed}
-      Tags:
-        - Key: app
-          Value: code-and-coffee-service
+      BucketName: !Sub code-and-coffee-service-web-resources-${Environment}-${RandomSeed}
       CorsConfiguration:
         CorsRules:
           - AllowedOrigins:
@@ -34,22 +34,19 @@ Resources:
     Type: AWS::S3::BucketPolicy
     DeletionPolicy: Delete
     Properties:
-      Bucket: !Sub code-and-coffee-service-web-resources-${RandomSeed}
+      Bucket: !Sub code-and-coffee-service-web-resources-${Environment}-${RandomSeed}
       PolicyDocument:
         Statement:
           - Sid: PublicReadGetObject
             Effect: Allow
             Principal: "*"
             Action: "s3:GetObject"
-            Resource: !Sub arn:aws:s3:::code-and-coffee-service-web-resources-${RandomSeed}/*
+            Resource: !Sub arn:aws:s3:::code-and-coffee-service-web-resources-${Environment}-${RandomSeed}/*
   LambdaFunction:
     Type: "AWS::Lambda::Function"
     Properties:
-      Tags:
-        - Key: app
-          Value: code-and-coffee-service
       Code:
-        S3Bucket: !Sub code-and-coffee-service-deploy-${RandomSeed}
+        S3Bucket: !Sub code-and-coffee-service-deploy-${Environment}-${RandomSeed}
         S3Key: !Ref LambdaKey
       Handler: lambda-package/bundle.handler
       MemorySize: 128
@@ -59,7 +56,7 @@ Resources:
   LambdaFunctionLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: !Sub /aws/lambda/code-and-coffee-service-${RandomSeed}
+      LogGroupName: !Sub /aws/lambda/code-and-coffee-service-${Environment}-${RandomSeed}
       RetentionInDays: 14
   LambdaFunctionPermissionApiGateway:
     Type: AWS::Lambda::Permission
@@ -71,8 +68,6 @@ Resources:
   ApiGatewayApi:
     Type: "AWS::ApiGatewayV2::Api"
     Properties:
-      Tags:
-        app: code-and-coffee-service
       Name: Code and Coffee Service
       ProtocolType: HTTP
       Description: API for the Code and Coffee Service
@@ -124,9 +119,6 @@ Resources:
   CloudFrontDistribution:
     Type: "AWS::CloudFront::Distribution"
     Properties:
-      Tags:
-        - Key: app
-          Value: code-and-coffee-service
       DistributionConfig:
         Comment: Code and Coffee Service
         Origins:

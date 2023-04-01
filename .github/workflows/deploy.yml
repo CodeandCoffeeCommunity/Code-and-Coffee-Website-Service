@@ -1,19 +1,50 @@
 name: Deploy
 
 on:
-  workflow_dispatch:
-  push:
-    branches: [master]
+  workflow_call:
+    inputs:
+      GOOGLE_CALENDAR_API_KEY:
+        description: Google Calendar API Key
+        required: true
+        type: string
+      GOOGLE_CALENDAR_ID:
+        description: Google Calendar ID
+        required: true
+        type: string
+      RANDOM_SEED:
+        description: Random seed to use for generating unique names
+        required: true
+        type: string
+      VITE_ROOT_URL:
+        description: Vite root URL
+        required: true
+        type: string
+      ENVIRONMENT:
+        description: Environment
+        required: true
+        type: string
+    secrets:
+      AWS_REGION-path:
+        description: AWS Region
+        required: true
+      AWS_ACCESS_KEY_ID:
+        description: AWS Access Key ID
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        description: AWS Secret Access Key
+        required: true
+      ACM_CERTIFICATE_ARN:
+        description: ACM Certificate ARN
+        required: true
+      LAMBDA_ROLE_ARN:
+        description: Lambda role ARN
+        required: true
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
+    environment: ${{ inputs.ENVIRONMENT }}
     steps:
       - name: Get current time
         uses: srfrnk/current-time@master
@@ -50,13 +81,29 @@ jobs:
         with:
           args: zip -qq -r ${{ github.sha }}.zip lambda-package/bundle.js
       - name: Execute CloudFormation deployment infrastructure template
-        run: aws cloudformation deploy --template-file ./src/infrastructure/deploy.template.yaml --stack-name code-and-coffee-service-deploy --parameter-overrides RandomSeed=${{ secrets.RANDOM_SEED }}
+        run: aws cloudformation deploy --template-file ./src/infrastructure/deploy.template.yaml --stack-name code-and-coffee-service-deploy-${{ input.ENVIRONMENT }} --parameter-overrides RandomSeed=${{ secrets.RANDOM_SEED }} ENVIRONMENT=${{ input.ENVIRONMENT }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: Upload lambda package to S3
-        run: aws s3 cp ${{ github.sha }}.zip s3://code-and-coffee-service-deploy-${{ secrets.RANDOM_SEED }}/${{ github.sha }}.zip
+        run: aws s3 cp ${{ github.sha }}.zip s3://code-and-coffee-service-deploy-${{ input.ENVIRONMENT }}-${{ secrets.RANDOM_SEED }}/${{ github.sha }}.zip
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: Execute CloudFormation runtime infrastructure template
-        run: aws cloudformation deploy --template-file ./src/infrastructure/runtime.template.yaml --stack-name code-and-coffee-service --parameter-overrides LambdaKey=${{ github.sha }}.zip AcmCertificateArn=${{ secrets.ACM_CERTIFICATE_ARN }} RandomSeed=${{ secrets.RANDOM_SEED }} LambdaRoleArn=${{ secrets.LAMBDA_ROLE_ARN }}
+        run: aws cloudformation deploy --template-file ./src/infrastructure/runtime.template.yaml --stack-name code-and-coffee-service-${{ input.ENVIRONMENT }} --parameter-overrides LambdaKey=${{ github.sha }}.zip AcmCertificateArn=${{ secrets.ACM_CERTIFICATE_ARN }} RandomSeed=${{ input.RANDOM_SEED }} Environment=${{ input.ENVIRONMENT }} LambdaRoleArn=${{ secrets.LAMBDA_ROLE_ARN }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: Upload dist to web resources bucket
-        run: aws s3 sync dist s3://code-and-coffee-service-web-resources-${{ secrets.RANDOM_SEED }}
+        run: aws s3 sync dist s3://code-and-coffee-service-web-resources-${{ input.ENVIRONMENT }}-${{ secrets.RANDOM_SEED }}
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_REGION }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       - name: Publish SNS topic success
         if: ${{ success() }}
         uses: nothingalike/sns-publish-topic@v1.6
