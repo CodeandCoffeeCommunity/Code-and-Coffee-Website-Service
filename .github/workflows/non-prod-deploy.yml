@@ -7,17 +7,17 @@ on:
 
 jobs:
   deploy-non-prod:
-    uses: CodeandCoffeeCommunity/Code-and-Coffee-Website-Service/.github/workflows/deploy.yml@main
-    with:
-      GOOGLE_CALENDAR_ID: ${{ env.GOOGLE_CALENDAR_ID }}
-      RANDOM_SEED: ${{ env.RANDOM_SEED }}
-      VITE_ROOT_URL: ${{ env.VITE_ROOT_URL }}
-      ENVIRONMENT: non-prod
-    secrets:
-      AWS_REGION: ${{ secrets.AWS_REGION }}
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      ACM_CERTIFICATE_ARN: ${{ secrets.ACM_CERTIFICATE_ARN }}
-      LAMBDA_ROLE_ARN: ${{ secrets.LAMBDA_ROLE_ARN }}
-      GOOGLE_CALENDAR_API_KEY: ${{ env.GOOGLE_CALENDAR_API_KEY }}
-
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ./.github/actions/deploy
+        with:
+          GOOGLE_CALENDAR_ID: ${{ env.GOOGLE_CALENDAR_ID }}
+          RANDOM_SEED: ${{ env.RANDOM_SEED }}
+          VITE_ROOT_URL: ${{ env.VITE_ROOT_URL }}
+          ENVIRONMENT: non-prod
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          ACM_CERTIFICATE_ARN: ${{ secrets.ACM_CERTIFICATE_ARN }}
+          LAMBDA_ROLE_ARN: ${{ secrets.LAMBDA_ROLE_ARN }}
+          GOOGLE_CALENDAR_API_KEY: ${{ env.GOOGLE_CALENDAR_API_KEY }}
