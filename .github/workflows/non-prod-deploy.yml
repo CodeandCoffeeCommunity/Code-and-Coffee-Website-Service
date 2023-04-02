@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy-non-prod:
-    uses: ./deploy.yml
+    uses: CodeandCoffeeCommunity/Code-and-Coffee-Website-Service/.github/workflows/deploy.yml@main
     with:
       GOOGLE_CALENDAR_ID: ${{ env.GOOGLE_CALENDAR_ID }}
       RANDOM_SEED: ${{ env.RANDOM_SEED }}
