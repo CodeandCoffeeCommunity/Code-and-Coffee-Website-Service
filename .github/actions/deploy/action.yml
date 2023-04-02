@@ -48,6 +48,7 @@ runs:
         node-version: 14.x
     - name: Get dependencies
       run: npm ci
+      shell: bash
     - name: Replace tokens
       uses: cschleiden/replace-tokens@v1
       with:
@@ -63,6 +64,7 @@ runs:
         GOOGLE_CALENDAR_ID: ${{ inputs.GOOGLE_CALENDAR_ID }}
     - name: Build
       run: npm run build
+      shell: bash
       env:
         VITE_ROOT_URL: ${{ inputs.VITE_ROOT_URL }}
     - name: Zip lambda package
@@ -71,24 +73,28 @@ runs:
         args: zip -qq -r ${{ github.sha }}.zip lambda-package/bundle.js
     - name: Execute CloudFormation deployment infrastructure template
       run: aws cloudformation deploy --template-file ./src/infrastructure/deploy.template.yaml --stack-name code-and-coffee-service-deploy-${{ inputs.ENVIRONMENT }} --parameter-overrides RandomSeed=${{ inputs.RANDOM_SEED }} ENVIRONMENT=${{ input.ENVIRONMENT }}
+      shell: bash
       env:
         AWS_ACCESS_KEY_ID: ${{ inputs.AWS_ACCESS_KEY_ID }}
         AWS_DEFAULT_REGION: ${{ inputs.AWS_REGION }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
     - name: Upload lambda package to S3
       run: aws s3 cp ${{ github.sha }}.zip s3://code-and-coffee-service-deploy-${{ inputs.ENVIRONMENT }}-${{ inputs.RANDOM_SEED }}/${{ github.sha }}.zip
+      shell: bash
       env:
         AWS_ACCESS_KEY_ID: ${{ inputs.AWS_ACCESS_KEY_ID }}
         AWS_DEFAULT_REGION: ${{ inputs.AWS_REGION }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
     - name: Execute CloudFormation runtime infrastructure template
       run: aws cloudformation deploy --template-file ./src/infrastructure/runtime.template.yaml --stack-name code-and-coffee-service-${{ inputs.ENVIRONMENT }} --parameter-overrides LambdaKey=${{ github.sha }}.zip AcmCertificateArn=${{ inputs.ACM_CERTIFICATE_ARN }} RandomSeed=${{ inputs.RANDOM_SEED }} Environment=${{ input.ENVIRONMENT }} LambdaRoleArn=${{ inputs.LAMBDA_ROLE_ARN }}
+      shell: bash
       env:
         AWS_ACCESS_KEY_ID: ${{ inputs.AWS_ACCESS_KEY_ID }}
         AWS_DEFAULT_REGION: ${{ inputs.AWS_REGION }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
     - name: Upload dist to web resources bucket
       run: aws s3 sync dist s3://code-and-coffee-service-web-resources-${{ inputs.ENVIRONMENT }}-${{ inputs.RANDOM_SEED }}
+      shell: bash
       env:
         AWS_ACCESS_KEY_ID: ${{ inputs.AWS_ACCESS_KEY_ID }}
         AWS_DEFAULT_REGION: ${{ inputs.AWS_REGION }}
