@@ -171,7 +171,7 @@ Resources:
         MinTTL: 300
         DefaultTTL: 300
         MaxTTL: 300
-        Name: "CodeAndCoffeeServiceCachePolicy"
+        Name: !Sub CodeAndCoffeeServiceCachePolicy-${Environment}-${RandomSeed}
         ParametersInCacheKeyAndForwardedToOrigin:
           CookiesConfig:
             CookieBehavior: none
