@@ -68,7 +68,7 @@ Resources:
   ApiGatewayApi:
     Type: "AWS::ApiGatewayV2::Api"
     Properties:
-      Name: Code and Coffee Service
+      Name: !Sub Code and Coffee Service
       ProtocolType: HTTP
       Description: API for the Code and Coffee Service
       CorsConfiguration:
@@ -114,7 +114,7 @@ Resources:
   ApiGatewayLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: /aws/apigateway/code-and-coffee-service
+      LogGroupName: /aws/apigateway/code-and-coffee-service-${Environment}-${RandomSeed}
       RetentionInDays: 14
   CloudFrontDistribution:
     Type: "AWS::CloudFront::Distribution"
