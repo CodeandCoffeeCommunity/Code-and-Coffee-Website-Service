@@ -3,7 +3,7 @@ name: Non Prod Deploy
 on:
   workflow_dispatch:
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   deploy-non-prod:

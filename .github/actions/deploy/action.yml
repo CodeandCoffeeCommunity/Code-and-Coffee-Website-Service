@@ -36,12 +36,12 @@ runs:
   using: "composite"
   steps:
     - name: Get current time
-      uses: srfrnk/current-time@master
+      uses: josStorer/get-current-time@v2
       id: time
       with:
         format: LLLL
     - name: Setup node
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3
       with:
         node-version: 14.x
     - name: Get dependencies
@@ -55,7 +55,7 @@ runs:
         files: '["**/*.js","**/**/*.js","**/*.json","**/**/*.json","**/*.ts","**/**/*.ts"]'
       env:
         BUILD_NUMBER: ${{ github.run_number }}
-        BUILD_DATE: ${{ steps.time.outputs.formattedTime }}
+        BUILD_DATE: ${{ steps.time.outputs.readableTime }}
         SHA: ${{ github.sha }}
         REF: ${{ github.ref }}
         GOOGLE_CALENDAR_API_KEY: ${{ inputs.GOOGLE_CALENDAR_API_KEY }}
@@ -96,24 +96,4 @@ runs:
       env:
         AWS_ACCESS_KEY_ID: ${{ inputs.AWS_ACCESS_KEY_ID }}
         AWS_DEFAULT_REGION: ${{ inputs.AWS_REGION }}
-        AWS_SECRET_ACCESS_KEY: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
-    - name: Publish SNS topic success
-      if: ${{ success() }}
-      uses: nothingalike/sns-publish-topic@v1.6
-      with:
-        MESSAGE: "${{ github.repository }} '${{ github.workflow }}.${{ github.run_number }}' successful"
-        TOPIC_ARN: ${{ inputs.SNS_ARN }}
-      env:
-        AWS_REGION: ${{ inputs.AWS_REGION }}
-        AWS_ACCESS_KEY_ID: ${{ inputs.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
-    - name: Publish SNS topic failure
-      if: ${{ !success() }}
-      uses: nothingalike/sns-publish-topic@v1.6
-      with:
-        MESSAGE: "${{ github.repository }} '${{ github.workflow }}.${{ github.run_number }}' failure"
-        TOPIC_ARN: ${{ inputs.SNS_ARN }}
-      env:
-        AWS_REGION: ${{ inputs.AWS_REGION }}
-        AWS_ACCESS_KEY_ID: ${{ inputs.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
