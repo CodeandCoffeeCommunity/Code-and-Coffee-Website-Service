@@ -56,7 +56,7 @@ Resources:
   LambdaFunctionLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: !Sub /aws/lambda/code-and-coffee-service-${Environment}-${RandomSeed}
+      LogGroupName: !Sub /aws/lambda/coffee-${Environment}
       RetentionInDays: 14
   LambdaFunctionPermissionApiGateway:
     Type: AWS::Lambda::Permission
@@ -114,7 +114,7 @@ Resources:
   ApiGatewayLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: /aws/apigateway/code-and-coffee-service-${Environment}-${RandomSeed}
+      LogGroupName: /aws/apigateway/coffee-${Environment}
       RetentionInDays: 14
   CloudFrontDistribution:
     Type: "AWS::CloudFront::Distribution"
