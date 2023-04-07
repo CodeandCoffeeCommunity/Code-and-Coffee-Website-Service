@@ -118,7 +118,7 @@ Resources:
     Type: "AWS::CloudFront::Distribution"
     Properties:
       DistributionConfig:
-        Comment: Code and Coffee Service
+        Comment: !Sub Code and Coffee Service ${Environment}
         Origins:
           - DomainName: !Sub "${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com"
             Id: api-gateway
