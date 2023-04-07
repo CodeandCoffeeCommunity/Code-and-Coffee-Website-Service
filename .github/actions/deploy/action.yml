@@ -36,17 +36,16 @@ runs:
   using: "composite"
   steps:
     - name: Get current time
-      uses: srfrnk/current-time@master
+      uses: josStorer/get-current-time@v2
       id: time
       with:
         format: LLLL
-    - name: Checkout
-      uses: actions/checkout@v2
     - name: Setup node
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3
       with:
         node-version: 14.x
     - name: Get dependencies
+      shell: bash
       run: npm ci
     - name: Replace tokens
       uses: cschleiden/replace-tokens@v1
@@ -56,12 +55,13 @@ runs:
         files: '["**/*.js","**/**/*.js","**/*.json","**/**/*.json","**/*.ts","**/**/*.ts"]'
       env:
         BUILD_NUMBER: ${{ github.run_number }}
-        BUILD_DATE: ${{ steps.time.outputs.formattedTime }}
+        BUILD_DATE: ${{ steps.time.outputs.readableTime }}
         SHA: ${{ github.sha }}
         REF: ${{ github.ref }}
         GOOGLE_CALENDAR_API_KEY: ${{ inputs.GOOGLE_CALENDAR_API_KEY }}
         GOOGLE_CALENDAR_ID: ${{ inputs.GOOGLE_CALENDAR_ID }}
     - name: Build
+      shell: bash
       run: npm run build
       env:
         VITE_ROOT_URL: ${{ inputs.VITE_ROOT_URL }}
@@ -70,46 +70,30 @@ runs:
       with:
         args: zip -qq -r ${{ github.sha }}.zip lambda-package/bundle.js
     - name: Execute CloudFormation deployment infrastructure template
-      run: aws cloudformation deploy --template-file ./src/infrastructure/deploy.template.yaml --stack-name code-and-coffee-service-deploy-${{ inputs.ENVIRONMENT }} --parameter-overrides RandomSeed=${{ inputs.RANDOM_SEED }} ENVIRONMENT=${{ input.ENVIRONMENT }}
+      shell: bash
+      run: aws cloudformation deploy --template-file ./src/infrastructure/deploy.template.yaml --stack-name code-and-coffee-service-deploy-${{ inputs.ENVIRONMENT }} --parameter-overrides RandomSeed=${{ inputs.RANDOM_SEED }} Environment=${{ inputs.ENVIRONMENT }}
       env:
         AWS_ACCESS_KEY_ID: ${{ inputs.AWS_ACCESS_KEY_ID }}
         AWS_DEFAULT_REGION: ${{ inputs.AWS_REGION }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
     - name: Upload lambda package to S3
+      shell: bash
       run: aws s3 cp ${{ github.sha }}.zip s3://code-and-coffee-service-deploy-${{ inputs.ENVIRONMENT }}-${{ inputs.RANDOM_SEED }}/${{ github.sha }}.zip
       env:
         AWS_ACCESS_KEY_ID: ${{ inputs.AWS_ACCESS_KEY_ID }}
         AWS_DEFAULT_REGION: ${{ inputs.AWS_REGION }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
     - name: Execute CloudFormation runtime infrastructure template
-      run: aws cloudformation deploy --template-file ./src/infrastructure/runtime.template.yaml --stack-name code-and-coffee-service-${{ inputs.ENVIRONMENT }} --parameter-overrides LambdaKey=${{ github.sha }}.zip AcmCertificateArn=${{ inputs.ACM_CERTIFICATE_ARN }} RandomSeed=${{ inputs.RANDOM_SEED }} Environment=${{ input.ENVIRONMENT }} LambdaRoleArn=${{ inputs.LAMBDA_ROLE_ARN }}
+      shell: bash
+      run: aws cloudformation deploy --template-file ./src/infrastructure/runtime.template.yaml --stack-name code-and-coffee-service-${{ inputs.ENVIRONMENT }} --parameter-overrides LambdaKey=${{ github.sha }}.zip AcmCertificateArn=${{ inputs.ACM_CERTIFICATE_ARN }} RandomSeed=${{ inputs.RANDOM_SEED }} Environment=${{ inputs.ENVIRONMENT }} LambdaRoleArn=${{ inputs.LAMBDA_ROLE_ARN }}
       env:
         AWS_ACCESS_KEY_ID: ${{ inputs.AWS_ACCESS_KEY_ID }}
         AWS_DEFAULT_REGION: ${{ inputs.AWS_REGION }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
     - name: Upload dist to web resources bucket
+      shell: bash
       run: aws s3 sync dist s3://code-and-coffee-service-web-resources-${{ inputs.ENVIRONMENT }}-${{ inputs.RANDOM_SEED }}
       env:
         AWS_ACCESS_KEY_ID: ${{ inputs.AWS_ACCESS_KEY_ID }}
         AWS_DEFAULT_REGION: ${{ inputs.AWS_REGION }}
-        AWS_SECRET_ACCESS_KEY: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
-    - name: Publish SNS topic success
-      if: ${{ success() }}
-      uses: nothingalike/sns-publish-topic@v1.6
-      with:
-        MESSAGE: "${{ github.repository }} '${{ github.workflow }}.${{ github.run_number }}' successful"
-        TOPIC_ARN: ${{ inputs.SNS_ARN }}
-      env:
-        AWS_REGION: ${{ inputs.AWS_REGION }}
-        AWS_ACCESS_KEY_ID: ${{ inputs.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
-    - name: Publish SNS topic failure
-      if: ${{ !success() }}
-      uses: nothingalike/sns-publish-topic@v1.6
-      with:
-        MESSAGE: "${{ github.repository }} '${{ github.workflow }}.${{ github.run_number }}' failure"
-        TOPIC_ARN: ${{ inputs.SNS_ARN }}
-      env:
-        AWS_REGION: ${{ inputs.AWS_REGION }}
-        AWS_ACCESS_KEY_ID: ${{ inputs.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.AWS_SECRET_ACCESS_KEY }}

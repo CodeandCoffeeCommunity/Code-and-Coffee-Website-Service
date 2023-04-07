@@ -56,7 +56,6 @@ Resources:
   LambdaFunctionLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: !Sub /aws/lambda/code-and-coffee-service-${Environment}-${RandomSeed}
       RetentionInDays: 14
   LambdaFunctionPermissionApiGateway:
     Type: AWS::Lambda::Permission
@@ -68,7 +67,7 @@ Resources:
   ApiGatewayApi:
     Type: "AWS::ApiGatewayV2::Api"
     Properties:
-      Name: Code and Coffee Service
+      Name: !Sub Code and Coffee Service
       ProtocolType: HTTP
       Description: API for the Code and Coffee Service
       CorsConfiguration:
@@ -114,13 +113,12 @@ Resources:
   ApiGatewayLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: /aws/apigateway/code-and-coffee-service
       RetentionInDays: 14
   CloudFrontDistribution:
     Type: "AWS::CloudFront::Distribution"
     Properties:
       DistributionConfig:
-        Comment: Code and Coffee Service
+        Comment: !Sub Code and Coffee Service ${Environment}
         Origins:
           - DomainName: !Sub "${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com"
             Id: api-gateway
@@ -171,7 +169,7 @@ Resources:
         MinTTL: 300
         DefaultTTL: 300
         MaxTTL: 300
-        Name: "CodeAndCoffeeServiceCachePolicy"
+        Name: !Sub CodeAndCoffeeServiceCachePolicy-${Environment}-${RandomSeed}
         ParametersInCacheKeyAndForwardedToOrigin:
           CookiesConfig:
             CookieBehavior: none

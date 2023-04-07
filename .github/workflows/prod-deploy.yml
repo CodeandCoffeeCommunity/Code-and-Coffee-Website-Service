@@ -1,14 +1,14 @@
 name: Prod Deploy
 
 on:
-  workflow_dispatch
+  workflow_dispatch:
 
 jobs:
   deploy-prod:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: .github/actions/deploy
         with:
           GOOGLE_CALENDAR_ID: ${{ env.GOOGLE_CALENDAR_ID }}
@@ -21,4 +21,3 @@ jobs:
           ACM_CERTIFICATE_ARN: ${{ secrets.ACM_CERTIFICATE_ARN }}
           LAMBDA_ROLE_ARN: ${{ secrets.LAMBDA_ROLE_ARN }}
           GOOGLE_CALENDAR_API_KEY: ${{ env.GOOGLE_CALENDAR_API_KEY }}
-
