@@ -13,9 +13,9 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/deploy
         with:
-          GOOGLE_CALENDAR_ID: ${{ env.GOOGLE_CALENDAR_ID }}
-          RANDOM_SEED: ${{ env.RANDOM_SEED }}
-          VITE_ROOT_URL: ${{ env.VITE_ROOT_URL }}
+          GOOGLE_CALENDAR_ID: $GOOGLE_CALENDAR_ID
+          RANDOM_SEED: $RANDOM_SEED
+          VITE_ROOT_URL: $VITE_ROOT_URL
           ENVIRONMENT: non-prod
           AWS_REGION: ${{ secrets.AWS_REGION }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
