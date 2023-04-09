@@ -1,13 +1,12 @@
-name: Non Prod Deploy
+name: Production Deploy
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
 
 jobs:
-  deploy-non-prod:
+  deploy-prod:
     runs-on: ubuntu-latest
+    environment: production
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v3
@@ -16,7 +15,7 @@ jobs:
           GOOGLE_CALENDAR_ID: ${{ secrets.GOOGLE_CALENDAR_ID }}
           RANDOM_SEED: ${{ secrets.RANDOM_SEED }}
           VITE_ROOT_URL: ${{ secrets.VITE_ROOT_URL }}
-          ENVIRONMENT: non-prod
+          ENVIRONMENT: production
           AWS_REGION: ${{ secrets.AWS_REGION }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
