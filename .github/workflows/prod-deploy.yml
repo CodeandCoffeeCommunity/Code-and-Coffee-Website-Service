@@ -9,7 +9,7 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v3
-      - uses: .github/actions/deploy
+      - uses: ./.github/actions/deploy
         with:
           GOOGLE_CALENDAR_ID: ${{ secrets.GOOGLE_CALENDAR_ID }}
           RANDOM_SEED: ${{ secrets.RANDOM_SEED }}
