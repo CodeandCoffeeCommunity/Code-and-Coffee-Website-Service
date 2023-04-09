@@ -68,7 +68,7 @@ runs:
     - name: Zip lambda package
       uses: montudor/action-zip@v1
       with:
-        args: zip -qq -r ${{ github.sha }}.zip lambda-package/bundle.js
+        args: zip -qq -r ${{ github.run_number }}.zip lambda-package/bundle.js
     - name: Execute CloudFormation deployment infrastructure template
       shell: bash
       run: aws cloudformation deploy --template-file ./src/infrastructure/deploy.template.yaml --stack-name code-and-coffee-service-deploy-${{ inputs.ENVIRONMENT }} --parameter-overrides RandomSeed=${{ inputs.RANDOM_SEED }} Environment=${{ inputs.ENVIRONMENT }}
@@ -78,14 +78,14 @@ runs:
         AWS_SECRET_ACCESS_KEY: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
     - name: Upload lambda package to S3
       shell: bash
-      run: aws s3 cp ${{ github.sha }}.zip s3://code-and-coffee-service-deploy-${{ inputs.ENVIRONMENT }}-${{ inputs.RANDOM_SEED }}/${{ github.sha }}.zip
+      run: aws s3 cp ${{ github.run_number }}.zip s3://code-and-coffee-service-deploy-${{ inputs.ENVIRONMENT }}-${{ inputs.RANDOM_SEED }}/${{ github.run_number }}.zip
       env:
         AWS_ACCESS_KEY_ID: ${{ inputs.AWS_ACCESS_KEY_ID }}
         AWS_DEFAULT_REGION: ${{ inputs.AWS_REGION }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
     - name: Execute CloudFormation runtime infrastructure template
       shell: bash
-      run: aws cloudformation deploy --template-file ./src/infrastructure/runtime.template.yaml --stack-name code-and-coffee-service-${{ inputs.ENVIRONMENT }} --parameter-overrides LambdaKey=${{ github.sha }}.zip AcmCertificateArn=${{ inputs.ACM_CERTIFICATE_ARN }} RandomSeed=${{ inputs.RANDOM_SEED }} Environment=${{ inputs.ENVIRONMENT }} LambdaRoleArn=${{ inputs.LAMBDA_ROLE_ARN }}
+      run: aws cloudformation deploy --template-file ./src/infrastructure/runtime.template.yaml --stack-name code-and-coffee-service-${{ inputs.ENVIRONMENT }} --parameter-overrides LambdaKey=${{ github.run_number }}.zip AcmCertificateArn=${{ inputs.ACM_CERTIFICATE_ARN }} RandomSeed=${{ inputs.RANDOM_SEED }} Environment=${{ inputs.ENVIRONMENT }} LambdaRoleArn=${{ inputs.LAMBDA_ROLE_ARN }}
       env:
         AWS_ACCESS_KEY_ID: ${{ inputs.AWS_ACCESS_KEY_ID }}
         AWS_DEFAULT_REGION: ${{ inputs.AWS_REGION }}
