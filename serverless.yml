@@ -1,0 +1,32 @@
+service: code-and-coffee-service
+frameworkVersion: "3"
+useDotenv: true
+
+plugins:
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  stage: ${opt:stage}
+  region: us-east-1
+  stackName: code-and-coffee-service-${opt:stage}
+  httpApi:
+    name: code-and-coffee-service-${opt:stage}
+
+package:
+  individually: true
+  patterns:
+    - "!*/**"
+    - "!*"
+
+functions:
+  lambda:
+    handler: lambda-package/bundle.handler
+    package:
+      patterns:
+        - "lambda-package/bundle.js"
+    events:
+      - httpApi:
+          path: /
+          method: get

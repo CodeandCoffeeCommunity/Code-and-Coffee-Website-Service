@@ -28,7 +28,8 @@ To run the project, run the following script.
 **_[ESLint](https://eslint.org/)_** - Used to enforce code standards to make it easier to read and maintain.  
 **_[Jest](https://jestjs.io/)_** - Used to run unit tests to make sure the code is working as expected (on the odd occasion we write tests).  
 **_[React](https://reactjs.org/)_** - Used to build the web components. Makes it easier to build interactive and reactive components.  
-**_[Amazon Web Services (AWS)](https://aws.amazon.com/)_** - Used to host the service.
+**_[Amazon Web Services (AWS)](https://aws.amazon.com/)_** - Used to host the service.  
+**_[Serverless Framework](https://www.serverless.com/)_** - Used to simplify the deployment of the service to AWS and to enable simulating the service locally for development and testing.
 
 ## Directory Structure
 
