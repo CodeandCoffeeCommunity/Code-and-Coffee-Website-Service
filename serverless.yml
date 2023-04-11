@@ -37,7 +37,7 @@ resources:
     WebResourcesBucket:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: code-and-coffee-service-web-resources-${opt:stage}-${sls:instanceId}
+        BucketName: code-and-coffee-service-web-resources-${opt:stage}-${env:RANDOM_SEED}
         CorsConfiguration:
           CorsRules:
             - AllowedOrigins:
@@ -50,14 +50,14 @@ resources:
       Type: AWS::S3::BucketPolicy
       DeletionPolicy: Delete
       Properties:
-        Bucket: code-and-coffee-service-web-resources-${opt:stage}-${sls:instanceId}
+        Bucket: code-and-coffee-service-web-resources-${opt:stage}-${env:RANDOM_SEED}
         PolicyDocument:
           Statement:
             - Sid: PublicReadGetObject
               Effect: Allow
               Principal: "*"
               Action: "s3:GetObject"
-              Resource: !Sub arn:aws:s3:::code-and-coffee-service-web-resources-${opt:stage}-${sls:instanceId}/*
+              Resource: !Sub arn:aws:s3:::code-and-coffee-service-web-resources-${opt:stage}-${env:RANDOM_SEED}/*
     CloudFrontDistribution:
       Type: "AWS::CloudFront::Distribution"
       Properties:

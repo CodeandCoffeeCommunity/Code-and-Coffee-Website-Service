@@ -10,9 +10,6 @@ inputs:
   VITE_ROOT_URL:
     description: Vite root URL
     required: true
-  ENVIRONMENT:
-    description: Environment
-    required: true
   AWS_REGION:
     description: AWS Region
     required: true
@@ -25,11 +22,11 @@ inputs:
   ACM_CERTIFICATE_ARN:
     description: ACM Certificate ARN
     required: true
-  LAMBDA_ROLE_ARN:
-    description: Lambda role ARN
-    required: true
   GOOGLE_CALENDAR_API_KEY:
     description: Google Calendar API Key
+    required: true
+  STAGE:
+    description: Stage
     required: true
 
 runs:
@@ -65,34 +62,18 @@ runs:
       run: npm run build
       env:
         VITE_ROOT_URL: ${{ inputs.VITE_ROOT_URL }}
-    - name: Zip lambda package
-      uses: montudor/action-zip@v1
-      with:
-        args: zip -qq -r ${{ github.run_number }}.zip lambda-package/bundle.js
-    - name: Execute CloudFormation deployment infrastructure template
-      shell: bash
-      run: aws cloudformation deploy --template-file ./src/infrastructure/deploy.template.yaml --stack-name code-and-coffee-service-deploy-${{ inputs.ENVIRONMENT }} --parameter-overrides RandomSeed=${{ inputs.RANDOM_SEED }} Environment=${{ inputs.ENVIRONMENT }}
-      env:
         AWS_ACCESS_KEY_ID: ${{ inputs.AWS_ACCESS_KEY_ID }}
-        AWS_DEFAULT_REGION: ${{ inputs.AWS_REGION }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
-    - name: Upload lambda package to S3
+    - name: Serverless Deploy
       shell: bash
-      run: aws s3 cp ${{ github.run_number }}.zip s3://code-and-coffee-service-deploy-${{ inputs.ENVIRONMENT }}-${{ inputs.RANDOM_SEED }}/${{ github.run_number }}.zip
+      run: serverless deploy --stage ${{ inputs.STAGE }} --region ${{AWS_REGION}}
       env:
-        AWS_ACCESS_KEY_ID: ${{ inputs.AWS_ACCESS_KEY_ID }}
-        AWS_DEFAULT_REGION: ${{ inputs.AWS_REGION }}
-        AWS_SECRET_ACCESS_KEY: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
-    - name: Execute CloudFormation runtime infrastructure template
-      shell: bash
-      run: aws cloudformation deploy --template-file ./src/infrastructure/runtime.template.yaml --stack-name code-and-coffee-service-${{ inputs.ENVIRONMENT }} --parameter-overrides LambdaKey=${{ github.run_number }}.zip AcmCertificateArn=${{ inputs.ACM_CERTIFICATE_ARN }} RandomSeed=${{ inputs.RANDOM_SEED }} Environment=${{ inputs.ENVIRONMENT }} LambdaRoleArn=${{ inputs.LAMBDA_ROLE_ARN }}
-      env:
-        AWS_ACCESS_KEY_ID: ${{ inputs.AWS_ACCESS_KEY_ID }}
-        AWS_DEFAULT_REGION: ${{ inputs.AWS_REGION }}
-        AWS_SECRET_ACCESS_KEY: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
+        VITE_ROOT_URL: ${{ inputs.VITE_ROOT_URL }}
+        RANDOM_SEED: ${{ inputs.RANDOM_SEED }}
+        ACM_CERTIFICATE_ARN: ${{ inputs.ACM_CERTIFICATE_ARN }}
     - name: Upload dist to web resources bucket
       shell: bash
-      run: aws s3 sync dist s3://code-and-coffee-service-web-resources-${{ inputs.ENVIRONMENT }}-${{ inputs.RANDOM_SEED }}
+      run: aws s3 sync dist s3://code-and-coffee-service-web-resources-${{ inputs.STAGE }}-${{ inputs.RANDOM_SEED }}
       env:
         AWS_ACCESS_KEY_ID: ${{ inputs.AWS_ACCESS_KEY_ID }}
         AWS_DEFAULT_REGION: ${{ inputs.AWS_REGION }}
