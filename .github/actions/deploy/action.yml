@@ -66,7 +66,7 @@ runs:
         AWS_SECRET_ACCESS_KEY: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
     - name: Serverless Deploy
       shell: bash
-      run: serverless deploy --stage ${{ inputs.STAGE }} --region ${{ inputs.AWS_REGION }}
+      run: npx serverless deploy --stage ${{ inputs.STAGE }} --region ${{ inputs.AWS_REGION }}
       env:
         VITE_ROOT_URL: ${{ inputs.VITE_ROOT_URL }}
         RANDOM_SEED: ${{ inputs.RANDOM_SEED }}
