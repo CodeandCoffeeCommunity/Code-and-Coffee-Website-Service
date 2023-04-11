@@ -30,3 +30,93 @@ functions:
       - httpApi:
           path: /
           method: get
+
+resources:
+  Description: Code and Coffee Service ${opt:stage}
+  Resources:
+    WebResourcesBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: code-and-coffee-service-web-resources-${opt:stage}-${sls:instanceId}
+        CorsConfiguration:
+          CorsRules:
+            - AllowedOrigins:
+                - "*"
+              AllowedHeaders:
+                - "*"
+              AllowedMethods:
+                - GET
+    WebResourcesBucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      DeletionPolicy: Delete
+      Properties:
+        Bucket: code-and-coffee-service-web-resources-${opt:stage}-${sls:instanceId}
+        PolicyDocument:
+          Statement:
+            - Sid: PublicReadGetObject
+              Effect: Allow
+              Principal: "*"
+              Action: "s3:GetObject"
+              Resource: !Sub arn:aws:s3:::code-and-coffee-service-web-resources-${opt:stage}-${sls:instanceId}/*
+    CloudFrontDistribution:
+      Type: "AWS::CloudFront::Distribution"
+      Properties:
+        DistributionConfig:
+          Comment: code-and-coffee-service-${opt:stage}
+          Origins:
+            - DomainName: !Sub ${HttpApi}.execute-api.${AWS::Region}.amazonaws.com
+              Id: api-gateway
+              CustomOriginConfig:
+                HTTPPort: 80
+                HTTPSPort: 443
+                OriginProtocolPolicy: https-only
+              OriginPath: "/prod"
+            - Id: s3-origin
+              DomainName: !GetAtt WebResourcesBucket.DomainName
+              S3OriginConfig:
+                OriginAccessIdentity: ""
+          DefaultCacheBehavior:
+            ForwardedValues:
+              QueryString: false
+            TargetOriginId: s3-origin
+            ViewerProtocolPolicy: redirect-to-https
+            CachePolicyId: !Ref CloudFrontCachePolicy
+          Enabled: true
+          HttpVersion: http2
+          ViewerCertificate:
+            AcmCertificateArn: ${env:ACM_CERTIFICATE_ARN}
+            SslSupportMethod: sni-only
+            MinimumProtocolVersion: TLSv1.2_2021
+          CacheBehaviors:
+            - PathPattern: /api/*
+              TargetOriginId: api-gateway
+              CachePolicyId: !Ref CloudFrontCachePolicy
+              ForwardedValues:
+                QueryString: false
+                Cookies:
+                  Forward: none
+              ViewerProtocolPolicy: redirect-to-https
+              AllowedMethods:
+                - GET
+                - HEAD
+                - OPTIONS
+              CachedMethods:
+                - GET
+                - HEAD
+    CloudFrontCachePolicy:
+      Type: AWS::CloudFront::CachePolicy
+      Properties:
+        CachePolicyConfig:
+          MinTTL: 300
+          DefaultTTL: 300
+          MaxTTL: 300
+          Name: code-and-coffee-service-cache-policy-${opt:stage}-${sls:instanceId}
+          ParametersInCacheKeyAndForwardedToOrigin:
+            CookiesConfig:
+              CookieBehavior: none
+            EnableAcceptEncodingBrotli: true
+            EnableAcceptEncodingGzip: true
+            HeadersConfig:
+              HeaderBehavior: none
+            QueryStringsConfig:
+              QueryStringBehavior: none
