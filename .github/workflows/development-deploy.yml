@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy-non-prod:
+  deploy-development:
     runs-on: ubuntu-latest
     environment: development
     timeout-minutes: 15

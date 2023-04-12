@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy-prod:
+  deploy-production:
     runs-on: ubuntu-latest
     environment: production
     timeout-minutes: 15
