@@ -38,46 +38,40 @@ To run the project locally, run the following script.
 **_[GitHub Actions](https://github.com/features/actions)_** - Used to automate the deployment of the project to AWS.  
 **_[GitHub](https://github.com)_** - Used to store the code and manage the project.  
 
-## Directory Structure
+## Directories
 
-### [Lambda Source](./src/api)
+### [API Source](./src/api)
 
-**./src/lambda**
+**./src/api**
 
-This is where the source code for the lambda functions is stored. Lambda functions are used for all the backend logic. Keep in mind that there is a cache that is used to store the results of the lambda functions. This cache is used to reduce the number of calls to the lambda functions.
+This is the source code for the API layer. The API layer allows us to fetch data from services to allow the web components to be timely. Keep in mind that there is a cache that is used to store the results of the API calls. This cache is used to reduce the cost of the calls to the API. This means that it takes about 5 minutes (or so) before data is updated on calls to the API.
 
-### [Web Source](./src/ui)
+### [UI Source](./src/ui)
 
-**./src/web**
+**./src/ui**
 
-This is where the source code for the web components is stored.
-
-### [Infrastructure](./src/infrastructure)
-
-**./src/infrastructure**
-
-This is where all the infrastructure to host the service is defined.
+This is the source code for the web components. The web components are build using react and are embedded on to the main website.
 
 ### [Public Resources](./public)
 
 **./public**
 
-This is where the public resources are stored. All files aren served as is.
+This is where the public resources are stored. All files are served as is.
 
 ### [Deployment Workflows](./.github/workflows)
 
-**./.github/workflows**
+**./.github**
 
-Where all the automated deployment workflows are stored.
+Where all the automated deployment workflows and general github configurations are stored.
 
 ### [Development Resources](./dev)
 
 **./dev**
 
-All resources only needed for local development are stored.
+Local development only resources are stored here.
 
 ### [Readme Resources](./dev)
 
 **./readme**
 
-All the resources used in the readme are stored.
+Where all the resources used in the readme are stored.
