@@ -4,12 +4,15 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "serve": "vite",
-    "build": "tsc -p src/lambda/tsconfig.json -outDir lambda-package && vite build && rollup -c",
+    "serve": "",
+    "build": "tsc -p src/api/tsconfig.json -outDir lambda-package && vite build && rollup -c",
     "preview": "vite preview",
-    "fix": "npx prettier --write . && npx eslint . --fix"
+    "fix": "npx prettier --write . && npx eslint . --fix",
+    "lambda-local": "serverless offline --stage local",
+    "ui-local": "vite"
   },
   "devDependencies": {
+    "@mockoon/cli": "^2.4.0",
     "@rollup/plugin-commonjs": "^24.0.1",
     "@rollup/plugin-json": "^6.0.0",
     "@rollup/plugin-node-resolve": "^15.0.1",

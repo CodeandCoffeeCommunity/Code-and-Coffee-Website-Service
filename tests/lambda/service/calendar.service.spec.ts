@@ -1,4 +1,4 @@
-import { getEvents } from "../../../src/lambda/service/calendar.service";
+import { getEvents } from "../../../src/api/service/calendar.service";
 
 describe("Calendar Service", () => {
   it("getEvents()", async () => {

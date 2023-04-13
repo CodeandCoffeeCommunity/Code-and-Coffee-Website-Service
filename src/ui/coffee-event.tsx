@@ -2,7 +2,7 @@ import React, { ReactNode, useEffect, useState } from "react";
 import styled from "styled-components";
 import { People24Filled } from "@fluentui/react-icons";
 import { Share24Filled } from "@fluentui/react-icons";
-import { MeetupEvent } from "../lambda/dao/meetup.dao";
+import { MeetupEvent } from "../api/dao/meetup.dao";
 import { WebConf } from "./web-conf";
 
 const PeopleIcon = People24Filled;

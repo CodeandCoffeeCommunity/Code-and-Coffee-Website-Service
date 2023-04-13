@@ -25,7 +25,7 @@ functions:
     handler: lambda-package/bundle.handler
     package:
       patterns:
-        - "lambda-package/bundle.js"
+        - "build/bundle.js"
     events:
       - httpApi:
           path: /

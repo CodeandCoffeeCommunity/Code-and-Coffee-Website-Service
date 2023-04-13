@@ -5,9 +5,9 @@ import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 
 export default {
-  input: "src/lambda/index.ts",
+  input: "src/api/index.ts",
   output: {
-    file: "lambda-package/bundle.js",
+    file: "build/bundle.js",
     format: "cjs",
   },
   plugins: [typescript(), json(), commonjs(), resolve(), terser()],

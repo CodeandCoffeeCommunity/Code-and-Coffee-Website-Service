@@ -1,4 +1,4 @@
-import { EventsResponse } from "../lambda";
+import { EventsResponse } from "../api";
 import { WebConf } from "./web-conf";
 
 /**
