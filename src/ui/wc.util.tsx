@@ -1,15 +1,15 @@
 import { createRoot, Root } from "react-dom/client";
 import { StyleSheetManager } from "styled-components";
-import React, { ComponentType } from "react";
+import React from "react";
 
 export function registerReactWebComponent({
   name,
-  attributes,
   Component,
+  attributes = [],
 }: {
   name: string;
-  attributes: string[];
-  Component: ComponentType<any>;
+  Component: any;
+  attributes?: string[];
 }) {
   class WebComponentClass extends HTMLElement {
     private readonly shadow: ShadowRoot;

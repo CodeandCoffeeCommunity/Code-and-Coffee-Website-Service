@@ -1,4 +1,4 @@
-import { handler } from "../../src/lambda";
+import { handler } from "../../src/api";
 import testEvent from "./events/test.json";
 
 describe("index", () => {

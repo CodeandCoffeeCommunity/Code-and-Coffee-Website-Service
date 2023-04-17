@@ -11,7 +11,7 @@ export default defineConfig({
   },
   build: {
     lib: {
-      entry: resolve(__dirname, "src/web/index.tsx"),
+      entry: resolve(__dirname, "src/ui/index.tsx"),
       name: "Index",
       fileName: "index",
     },
