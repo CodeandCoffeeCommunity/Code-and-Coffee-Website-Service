@@ -4,11 +4,12 @@
 
 A service layer to add additional functionality to the Code and Coffee website.
 
-The Code and Coffee website (https://codeandcoffee.org/) is built using squarespace. This service allows us to construct custom web components that can be used to add more complicated elements to the website than what would otherwise be possible using Squarespace.  
-  
-The project is built following best practices and is a good reference for anyone trying to build professional-adjacent quality projects.  
-  
+The Code and Coffee website (https://codeandcoffee.org/) is built using squarespace. This service allows us to construct custom web components that can be used to add more complicated elements to the website than what would otherwise be possible using Squarespace.
+
+The project is built following best practices and is a good reference for anyone trying to build professional-adjacent quality projects.
+
 Any questions about this project can be directed to [Brian Towne](https://www.linkedin.com/in/bjtowne/).
+
 ## Getting Started
 
 You need NodeJS installed locally to run this project. You can download it from https://nodejs.org/en/download/.
@@ -36,7 +37,8 @@ To run the project locally, run the following script.
 **_[Nodemon](https://nodemon.io/)_** - Used to automatically restart the service when changes are made to the code.  
 **_[Mockoon](https://mockoon.com/)_** - Used to simulate APIs for testing locally.  
 **_[GitHub Actions](https://github.com/features/actions)_** - Used to automate the deployment of the project to AWS.  
-**_[GitHub](https://github.com)_** - Used to store the code and manage the project.  
+**_[GitHub](https://github.com)_** - Used to store the code and manage the project.
+**_[Swagger](https://swagger.io/)_** - Used to document the API.
 
 ## Directories
 

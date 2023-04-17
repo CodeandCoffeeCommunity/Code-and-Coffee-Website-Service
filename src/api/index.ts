@@ -1,10 +1,18 @@
 import { APIGatewayProxyEventV2 } from "aws-lambda";
 import { APIGatewayProxyStructuredResultV2 } from "aws-lambda/trigger/api-gateway-proxy";
-import { getEvents } from "./service/calendar.service";
+import { getEvents } from "./service/events.service";
 import { MeetupEvent } from "./dao/meetup.dao";
 import { AppConf } from "./app-conf";
 
 export type EventsResponse = Array<MeetupEvent>;
+
+const pathMap = {
+  "/prod/api/events": getEvents,
+  "/prod/api/health": () => ({
+    status: "OK",
+    timestamp: new Date().toUTCString(),
+  }),
+} as Record<string, () => any>;
 
 export async function handler(
   event: APIGatewayProxyEventV2
@@ -30,17 +38,18 @@ export async function handler(
 async function handleRequest(
   event: APIGatewayProxyEventV2
 ): Promise<APIGatewayProxyStructuredResultV2> {
+  console.log("request received");
   const path = event.requestContext.http.path;
-  if (path == "/prod/api/events") {
+  const handler = pathMap[path];
+  if (handler) {
     return {
       statusCode: 200,
-      body: JSON.stringify(await getEvents()),
+      body: JSON.stringify(await handler()),
       headers: {
         "Content-Type": "application/json",
       },
     };
   }
-
   return {
     statusCode: 404,
     body: JSON.stringify({

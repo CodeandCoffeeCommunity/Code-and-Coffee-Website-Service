@@ -1,0 +1,89 @@
+openapi: 3.0.0
+x-stoplight:
+  id: djcn4tffq45ve
+info:
+  title: Code and Coffee Service
+  version: "1.0"
+  description: This is the API endpoints for the Code and Coffee Service. This service allows us to augment our website with custom functionality built by the community. Note the API is behind a cache that will delay updates.
+  contact:
+    name: Brian Towne
+    email: BJTowne9@gmail.com
+    url: "https://www.linkedin.com/in/bjtowne/"
+servers: []
+paths:
+  /events:
+    get:
+      summary: Events
+      tags:
+        - Events
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    eventUrl:
+                      type: string
+                    title:
+                      type: string
+                    going:
+                      type: string
+                    imageUrl:
+                      type: string
+                    venue:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        address:
+                          type: string
+                        city:
+                          type: string
+                        state:
+                          type: string
+                    dateTime:
+                      type: string
+                    group:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        city:
+                          type: string
+                        state:
+                          type: string
+                    description:
+                      type: string
+      operationId: get-events
+      description: Get the current events for Code and Coffee Nationally.
+  /health:
+    get:
+      summary: Health Check
+      tags:
+        - Health
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum:
+                      - OK
+                  timestamp:
+                    type: string
+      operationId: get-health
+      description: A health check endpoint used to validate the health of the APIs.
+components:
+  schemas: {}

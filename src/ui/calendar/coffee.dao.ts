@@ -1,5 +1,5 @@
-import { EventsResponse } from "../api";
-import { WebConf } from "./web-conf";
+import { EventsResponse } from "../../api";
+import { WebConf } from "../web-conf";
 
 /**
  * Get the details of all events from the Code and Coffee service.
