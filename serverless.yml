@@ -75,7 +75,6 @@ resources:
                 HTTPPort: 80
                 HTTPSPort: 443
                 OriginProtocolPolicy: https-only
-              OriginPath: "/prod"
             - Id: s3-origin
               DomainName: !GetAtt WebResourcesBucket.DomainName
               S3OriginConfig:
