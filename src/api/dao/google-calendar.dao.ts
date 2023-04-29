@@ -50,7 +50,7 @@ export type GoogleCalendarEvent = {
 export async function getCalendarEvents(): Promise<GoogleCalendar> {
   const response = await request({
     method: "GET",
-    url: `https://www.googleapis.com/calendar/v3/calendars/${AppConf.googleCalendarId}/events?key=${AppConf.googleCalendarApiKey}`,
+    url: `${AppConf.googleApiHost}/calendar/v3/calendars/${AppConf.googleCalendarId}/events?key=${AppConf.googleCalendarApiKey}`,
     name: "Google Calendar",
   });
   const data = (await response.data) as GoogleCalendar;

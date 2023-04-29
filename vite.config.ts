@@ -16,4 +16,11 @@ export default defineConfig({
       fileName: "index",
     },
   },
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://localhost:3000",
+      },
+    },
+  },
 });
