@@ -28,6 +28,12 @@ inputs:
   STAGE:
     description: Stage
     required: true
+  GOOGLE_API_HOST:
+    description: Google API Host
+    required: true
+  MEETUP_API_HOST:
+    description: Meetup API Host
+    required: true
 
 runs:
   using: "composite"
@@ -55,8 +61,6 @@ runs:
         BUILD_DATE: ${{ steps.time.outputs.readableTime }}
         SHA: ${{ github.sha }}
         REF: ${{ github.ref }}
-        GOOGLE_CALENDAR_API_KEY: ${{ inputs.GOOGLE_CALENDAR_API_KEY }}
-        GOOGLE_CALENDAR_ID: ${{ inputs.GOOGLE_CALENDAR_ID }}
     - name: Build
       shell: bash
       run: npm run build
@@ -73,6 +77,10 @@ runs:
         ACM_CERTIFICATE_ARN: ${{ inputs.ACM_CERTIFICATE_ARN }}
         AWS_ACCESS_KEY_ID: ${{ inputs.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
+        GOOGLE_CALENDAR_API_KEY: ${{ inputs.GOOGLE_CALENDAR_API_KEY }}
+        GOOGLE_CALENDAR_ID: ${{ inputs.GOOGLE_CALENDAR_ID }}
+        GOOGLE_API_HOST: ${{ inputs.GOOGLE_API_HOST }}
+        MEETUP_API_HOST: ${{ inputs.MEETUP_API_HOST }}
     - name: Upload dist to web resources bucket
       shell: bash
       run: aws s3 sync dist s3://code-and-coffee-service-web-resources-${{ inputs.STAGE }}-${{ inputs.RANDOM_SEED }}
