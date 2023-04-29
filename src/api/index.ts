@@ -2,7 +2,7 @@ import { APIGatewayProxyEventV2 } from "aws-lambda";
 import { APIGatewayProxyStructuredResultV2 } from "aws-lambda/trigger/api-gateway-proxy";
 import { MeetupEvent } from "./dao/meetup.dao";
 import { AppConf } from "./app-conf";
-import {router} from "./router";
+import { router } from "./router";
 
 export type EventsResponse = Array<MeetupEvent>;
 

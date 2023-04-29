@@ -1,6 +1,4 @@
 {
-  "watch": [
-    "src/api"
-  ],
+  "watch": ["src/api"],
   "ext": "ts,json"
 }

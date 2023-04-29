@@ -1,4 +1,4 @@
-import {getEvents} from "./service/events.service";
+import { getEvents } from "./service/events.service";
 
 type RouterMap = Record<string, () => any>;
 

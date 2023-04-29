@@ -1,5 +1,5 @@
 import { request } from "../util/request.util";
-import {AppConf} from "../app-conf";
+import { AppConf } from "../app-conf";
 
 //See https://www.meetup.com/api/schema/#p03-objects-section for Meetup API details.
 
