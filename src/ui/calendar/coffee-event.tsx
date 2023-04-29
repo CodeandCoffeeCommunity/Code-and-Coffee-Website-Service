@@ -259,18 +259,18 @@ export function CoffeeEvent({ event }: { event: MeetupEvent }) {
   }
 
   useEffect(() => {
-    fetch(`${WebConf.rootUrl}/city-icons/${event.group.id}.png`).then(
+    fetch(`${WebConf.rootHost}/city-icons/${event.group.id}.png`).then(
       (response) => {
         if (response.ok) {
           setIconImage(
             <CityIcon
-              src={`${WebConf.rootUrl}/city-icons/${event.group.id}.png`}
+              src={`${WebConf.rootHost}/city-icons/${event.group.id}.png`}
               alt={`${event.group.city} Icon`}
             />
           );
           setSmallIconImage(
             <SmallCityIcon
-              src={`${WebConf.rootUrl}/city-icons/${event.group.id}.png`}
+              src={`${WebConf.rootHost}/city-icons/${event.group.id}.png`}
               alt={`${event.group.city} Icon`}
             />
           );

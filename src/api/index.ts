@@ -3,6 +3,7 @@ import { APIGatewayProxyStructuredResultV2 } from "aws-lambda/trigger/api-gatewa
 import { MeetupEvent } from "./dao/meetup.dao";
 import { AppConf } from "./app-conf";
 import { router } from "./router";
+import colors from "colors";
 
 export type EventsResponse = Array<MeetupEvent>;
 
@@ -42,6 +43,7 @@ async function handleRequest(
       },
     };
   }
+  console.log(colors.blue('No handler found for path ') + colors.yellow(`"${path}"`))
   return {
     statusCode: 404,
     body: JSON.stringify({
