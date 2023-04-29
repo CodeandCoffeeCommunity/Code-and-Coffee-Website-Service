@@ -20,4 +20,6 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           ACM_CERTIFICATE_ARN: ${{ secrets.ACM_CERTIFICATE_ARN }}
           GOOGLE_CALENDAR_API_KEY: ${{ secrets.GOOGLE_CALENDAR_API_KEY }}
+          GOOGLE_API_HOST: ${{ secrets.GOOGLE_API_HOST }}
+          MEETUP_API_HOST: ${{ secrets.MEETUP_API_HOST }}
           STAGE: development
