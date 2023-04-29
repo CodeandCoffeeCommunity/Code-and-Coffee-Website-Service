@@ -22,14 +22,19 @@ package:
 
 functions:
   lambda:
-    handler: lambda-package/bundle.handler
+    handler: build/bundle.handler
     package:
       patterns:
-        - "build/bundle.js"
+        - "./build/bundle.cjs"
     events:
       - httpApi:
-          path: /
+          path: /{proxy+}
           method: get
+    environment:
+      GOOGLE_API_HOST: ${env:GOOGLE_API_HOST}
+      MEETUP_API_HOST: ${env:MEETUP_API_HOST}
+      GOOGLE_CALENDAR_API_KEY: ${env:GOOGLE_CALENDAR_API_KEY}
+      GOOGLE_CALENDAR_ID: ${env:GOOGLE_CALENDAR_ID}
 
 resources:
   Description: Code and Coffee Service ${opt:stage}
