@@ -23,6 +23,7 @@ export async function handler(
       }),
       headers: {
         "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*"
       },
     };
   }
@@ -40,6 +41,7 @@ async function handleRequest(
       body: JSON.stringify(await handler()),
       headers: {
         "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*"
       },
     };
   }
@@ -52,6 +54,7 @@ async function handleRequest(
     }),
     headers: {
       "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*"
     },
   };
 }
