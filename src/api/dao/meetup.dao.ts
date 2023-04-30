@@ -41,7 +41,7 @@ type QueryResponse = {
           node: MeetupEvent;
         }>;
       };
-    }
+    }|null
   >;
 };
 
@@ -74,9 +74,9 @@ const groupFragment =
  */
 function formQuery(chapters: Array<Chapter>): string {
   let newQuery = "query {";
-  chapters.forEach(({ meetupApiGroupId }) => {
-    newQuery += `a${meetupApiGroupId}:group(id:"${meetupApiGroupId}") { ...groupFragment }`;
-  });
+  for(const i in chapters) {
+    newQuery += `result${i}:groupByUrlname(urlname:"${chapters[i].meetupGroupUrlName}") { ...groupFragment }`;
+  }
   newQuery += "}" + eventFragment + groupFragment;
   return newQuery;
 }
@@ -89,8 +89,10 @@ function formQuery(chapters: Array<Chapter>): string {
 function processResponse(response: QueryResponse): Array<MeetupEvent> {
   const result = [] as Array<MeetupEvent>;
   for (const group of Object.values(response.data)) {
-    for (const event of group.upcomingEvents.edges) {
-      result.push(event.node);
+    if(group){
+      for (const event of group.upcomingEvents.edges) {
+        result.push(event.node);
+      }
     }
   }
   return result;

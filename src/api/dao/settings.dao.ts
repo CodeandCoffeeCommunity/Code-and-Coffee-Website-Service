@@ -6,7 +6,7 @@ import { AppConf } from "../app-conf";
  */
 export type Chapter = {
   name: string;
-  meetupApiGroupId: string;
+  meetupGroupUrlName: string;
 };
 
 /**
