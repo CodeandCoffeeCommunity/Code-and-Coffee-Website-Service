@@ -23,7 +23,7 @@ export async function handler(
       }),
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*"
+        "Access-Control-Allow-Origin": "*",
       },
     };
   }
@@ -41,11 +41,13 @@ async function handleRequest(
       body: JSON.stringify(await handler()),
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*"
+        "Access-Control-Allow-Origin": "*",
       },
     };
   }
-  console.log(colors.blue('No handler found for path ') + colors.yellow(`"${path}"`))
+  console.log(
+    colors.blue("No handler found for path ") + colors.yellow(`"${path}"`)
+  );
   return {
     statusCode: 404,
     body: JSON.stringify({
@@ -54,7 +56,7 @@ async function handleRequest(
     }),
     headers: {
       "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*"
+      "Access-Control-Allow-Origin": "*",
     },
   };
 }
