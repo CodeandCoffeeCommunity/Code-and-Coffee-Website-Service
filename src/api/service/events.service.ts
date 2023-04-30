@@ -1,20 +1,10 @@
-import { getCalendarEvents } from "../dao/google-calendar.dao";
 import { getMeetupEvents, MeetupEvent } from "../dao/meetup.dao";
 
+/**
+ * Get a list of all upcoming events for Code and Coffee.
+ */
 export async function getEvents(): Promise<Array<MeetupEvent>> {
-  const googleCalendarEvents = await getCalendarEvents();
-  const eventIds = [] as Array<string>;
-
-  for (const event of googleCalendarEvents.items) {
-    const match = event.description.match(/https:\/\/www.meetup.com\/.*\//g);
-    if (match) {
-      const meetupUrl = match[0];
-      const meetupEventId = meetupUrl.match(/(?<=\/events\/).*(?=\/)/g)?.[0];
-      if (meetupEventId) {
-        eventIds.push(meetupEventId);
-      }
-    }
-  }
-
-  return getMeetupEvents(eventIds);
+  return (await getMeetupEvents()).sort((a,b) => {
+    return new Date(a.dateTime).getTime() - new Date(b.dateTime).getTime()
+  });
 }
