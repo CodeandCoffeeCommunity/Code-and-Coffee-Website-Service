@@ -9,7 +9,7 @@ export async function request(options: RequestOptions): Promise<AxiosResponse> {
   console.info(
     colors.blue.bold("REST Request ") +
       colors.yellow(options.name) +
-      colors.blue(" with options: \n") +
+      "\n" +
       colors.yellow(
         JSON.stringify({
           name: options.name,
@@ -26,8 +26,8 @@ export async function request(options: RequestOptions): Promise<AxiosResponse> {
     console.info(
       colors.blue.bold("REST Response ") +
         colors.yellow(options.name) +
-        colors.green.bold(" success") +
-        colors.blue(" with response: \n") +
+        colors.green.bold(" SUCCESS") +
+        "\n" +
         colors.yellow(
           JSON.stringify({
             status: response.status,
@@ -45,8 +45,8 @@ export async function request(options: RequestOptions): Promise<AxiosResponse> {
       console.error(
         colors.blue.bold("REST Response ") +
           colors.yellow(options.name) +
-          colors.red.bold(" failure") +
-          colors.blue(" with response: \n") +
+          colors.red.bold(" FAILURE") +
+          "\n" +
           colors.yellow(
             JSON.stringify({
               status: axiosError.response.status,
