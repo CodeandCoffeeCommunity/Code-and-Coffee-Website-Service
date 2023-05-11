@@ -13,11 +13,26 @@ export type Chapter = {
  * Get a list of all the Code and Coffee Chapters.
  */
 export async function getChapters(): Promise<Chapter[]> {
-  return (
+  return (await (
     await request({
       name: "Chapters Setting",
       url: `${AppConf.settingsHost}/chapters.json`,
       method: "GET",
     })
-  ).data as Chapter[];
+  ).json()) as Chapter[];
+}
+
+/**
+ * Get the icon for the given chapter.
+ *
+ * @param chapter The chapter to get the icon for.
+ */
+export async function getChapterIcon(chapter: string): Promise<ArrayBuffer> {
+  return await (
+    await request({
+      name: "Chapter Icon",
+      url: `${AppConf.settingsHost}/chapter-icons/${chapter}.png`,
+      method: "GET",
+    })
+  ).arrayBuffer();
 }
