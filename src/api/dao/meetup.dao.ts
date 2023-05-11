@@ -25,6 +25,7 @@ export type MeetupEvent = {
     name: string;
     city: string;
     state: string;
+    urlname: string;
   };
   description: string;
 };
@@ -63,7 +64,7 @@ export async function getMeetupEvents(
 }
 
 const eventFragment =
-  "fragment eventFragment on Event { id eventUrl title description going imageUrl venue { name address city state} dateTime group { id name city state}}";
+  "fragment eventFragment on Event { id eventUrl title description going imageUrl venue { name address city state } dateTime group { id name city state urlname}}";
 const groupFragment =
   "fragment groupFragment on Group { upcomingEvents(input:{first:10}) { edges { node { ...eventFragment } } } }";
 
