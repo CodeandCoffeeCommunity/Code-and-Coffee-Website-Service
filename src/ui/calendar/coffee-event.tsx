@@ -264,13 +264,13 @@ export function CoffeeEvent({ event }: { event: MeetupEvent }) {
         if (response.ok) {
           setIconImage(
             <CityIcon
-              src={`${WebConf.rootHost}/city-icons/${event.group.urlname.toLowerCase()}`}
+              src={`${WebConf.rootHost}/api/chapter-icons/${event.group.urlname.toLowerCase()}`}
               alt={`${event.group.city} Icon`}
             />
           );
           setSmallIconImage(
             <SmallCityIcon
-              src={`${WebConf.rootHost}/city-icons/${event.group.urlname.toLowerCase()}`}
+              src={`${WebConf.rootHost}/api/chapter-icons/${event.group.urlname.toLowerCase()}`}
               alt={`${event.group.city} Icon`}
             />
           );
