@@ -1,8 +1,8 @@
-import { APIGatewayProxyEventV2 } from "aws-lambda";
-import { APIGatewayProxyStructuredResultV2 } from "aws-lambda/trigger/api-gateway-proxy";
-import { MeetupEvent } from "./dao/meetup.dao";
-import { AppConf } from "./app-conf";
-import { router } from "./router";
+import {APIGatewayProxyEventV2} from "aws-lambda";
+import {APIGatewayProxyStructuredResultV2} from "aws-lambda/trigger/api-gateway-proxy";
+import {MeetupEvent} from "./dao/meetup.dao";
+import {AppConf} from "./app-conf";
+import {Controller, router} from "./router";
 import colors from "colors";
 
 export type EventsResponse = Array<MeetupEvent>;
@@ -34,19 +34,23 @@ async function handleRequest(
 ): Promise<APIGatewayProxyStructuredResultV2> {
   console.log("request received");
   const path = event.requestContext.http.path;
-  const handler = router[path];
-  if (handler) {
-    return {
-      statusCode: 200,
-      body: JSON.stringify(await handler()),
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-    };
+  let controller = undefined as undefined|Controller;
+  for(const pathKey in router) {
+    if(new RegExp(`^${pathKey}$`).test(path)) {
+      controller = router[pathKey];
+      break;
+    }
+  }
+  if (controller) {
+    const response = await controller(event);
+    if (!response.headers) {
+      response.headers = {};
+    }
+    response.headers['Access-Control-Allow-Origin'] = '*';
+    return response
   }
   console.log(
-    colors.blue("No handler found for path ") + colors.yellow(`"${path}"`)
+    colors.blue("No controller found for path ") + colors.yellow(`"${path}"`)
   );
   return {
     statusCode: 404,
@@ -56,7 +60,6 @@ async function handleRequest(
     }),
     headers: {
       "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
     },
   };
 }

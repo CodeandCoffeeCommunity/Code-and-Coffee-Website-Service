@@ -57,9 +57,9 @@ export async function getMeetupEvents(
     url: `${AppConf.meetupApiHost}/gql`,
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    data: { query: finalQuery },
+    body: { query: finalQuery },
   });
-  return processResponse((await response.data) as QueryResponse);
+  return processResponse((await response.json()) as QueryResponse);
 }
 
 const eventFragment =
