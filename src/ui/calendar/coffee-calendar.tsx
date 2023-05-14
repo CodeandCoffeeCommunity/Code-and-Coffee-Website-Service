@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
-import { CoffeeEvent } from "./coffee-event";
+import React, {useEffect, useState} from "react";
+import {CoffeeEvent} from "./coffee-event";
 import styled from "styled-components";
-import { getEvents } from "./coffee.dao";
+import {getEvents} from "./coffee.dao";
+import {EventStats, getEventStats} from "./events.util";
+import {CoffeeEventStats} from "./coffee-event-stats";
 
 const CalendarContainer = styled.div`
   display: flex;
   flex-direction: column;
-  height: ${({ height }: { height: number }) => height}px;
+  height: ${({height}: { height: number }) => height}px;
   padding: 15px;
   border-radius: 20px;
   box-shadow: 3px 3px 33px rgba(0, 0, 0, 0.04);
@@ -63,25 +65,43 @@ const EventHolder = styled.div`
   }
 `;
 
-export function CoffeeCalendar({ height }: { height: number }) {
+export function CoffeeCalendar({height}: { height: number }) {
   const [coffeeEvents, setCoffeeEvents] = useState([] as Array<JSX.Element>);
+  const [showStats, setShowStats] = useState(false as boolean);
+  const [stats, setStats] = useState(undefined as undefined|EventStats);
 
   useEffect(() => {
     getEvents().then((events) => {
       const newCoffeeEvents = [] as Array<JSX.Element>;
-      console.log(events);
       for (const event of events) {
         if (event) {
-          newCoffeeEvents.push(<CoffeeEvent event={event} key={event.id} />);
+          newCoffeeEvents.push(<CoffeeEvent event={event} key={event.id}/>);
         }
       }
       setCoffeeEvents(newCoffeeEvents);
+      setStats(getEventStats(events));
     });
   }, []);
+
+  useEffect(() => {
+    function displayDialogListener(event: KeyboardEvent): void {
+
+      if (event.code === 'KeyI' && event.ctrlKey) {
+        setShowStats(!showStats);
+        console.log("Key Pressed!",!showStats);
+      }
+    }
+
+    document.addEventListener('keydown', displayDialogListener);
+    return () => {
+      document.removeEventListener('keydown', displayDialogListener);
+    }
+  }, [showStats])
 
   return (
     <CalendarContainer height={height}>
       <EventTitle>Events</EventTitle>
+      {showStats && stats && <CoffeeEventStats stats={stats}/>}
       <EventHolder>{coffeeEvents}</EventHolder>
     </CalendarContainer>
   );
