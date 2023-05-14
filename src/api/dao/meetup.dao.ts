@@ -18,13 +18,14 @@ export type MeetupEvent = {
     address: string;
     city: string;
     state: string;
-  };
+  }|null;
   dateTime: string;
   group: {
     id: string;
     name: string;
     city: string;
     state: string;
+    urlname: string;
   };
   description: string;
 };
@@ -41,7 +42,7 @@ type QueryResponse = {
           node: MeetupEvent;
         }>;
       };
-    }|null
+    } | null
   >;
 };
 
@@ -57,13 +58,13 @@ export async function getMeetupEvents(
     url: `${AppConf.meetupApiHost}/gql`,
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    data: { query: finalQuery },
+    body: { query: finalQuery },
   });
-  return processResponse((await response.data) as QueryResponse);
+  return processResponse((await response.json()) as QueryResponse);
 }
 
 const eventFragment =
-  "fragment eventFragment on Event { id eventUrl title description going imageUrl venue { name address city state} dateTime group { id name city state}}";
+  "fragment eventFragment on Event { id eventUrl title description going imageUrl venue { name address city state } dateTime group { id name city state urlname}}";
 const groupFragment =
   "fragment groupFragment on Group { upcomingEvents(input:{first:10}) { edges { node { ...eventFragment } } } }";
 
@@ -74,7 +75,7 @@ const groupFragment =
  */
 function formQuery(chapters: Array<Chapter>): string {
   let newQuery = "query {";
-  for(const i in chapters) {
+  for (const i in chapters) {
     newQuery += `result${i}:groupByUrlname(urlname:"${chapters[i].meetupGroupUrlName}") { ...groupFragment }`;
   }
   newQuery += "}" + eventFragment + groupFragment;
@@ -89,7 +90,7 @@ function formQuery(chapters: Array<Chapter>): string {
 function processResponse(response: QueryResponse): Array<MeetupEvent> {
   const result = [] as Array<MeetupEvent>;
   for (const group of Object.values(response.data)) {
-    if(group){
+    if (group) {
       for (const event of group.upcomingEvents.edges) {
         result.push(event.node);
       }

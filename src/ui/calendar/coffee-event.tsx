@@ -259,18 +259,18 @@ export function CoffeeEvent({ event }: { event: MeetupEvent }) {
   }
 
   useEffect(() => {
-    fetch(`${WebConf.rootHost}/city-icons/${event.group.id}.png`).then(
+    fetch(`${WebConf.rootHost}/api/chapter-icons/${event.group.urlname.toLowerCase()}`).then(
       (response) => {
         if (response.ok) {
           setIconImage(
             <CityIcon
-              src={`${WebConf.rootHost}/city-icons/${event.group.id}.png`}
+              src={`${WebConf.rootHost}/api/chapter-icons/${event.group.urlname.toLowerCase()}`}
               alt={`${event.group.city} Icon`}
             />
           );
           setSmallIconImage(
             <SmallCityIcon
-              src={`${WebConf.rootHost}/city-icons/${event.group.id}.png`}
+              src={`${WebConf.rootHost}/api/chapter-icons/${event.group.urlname.toLowerCase()}`}
               alt={`${event.group.city} Icon`}
             />
           );
@@ -313,7 +313,7 @@ export function CoffeeEvent({ event }: { event: MeetupEvent }) {
         <RsvpBreakContainer>
           <CityContainer>
             <CityLabel>
-              {event.venue.city}, {event.venue.state.toUpperCase()}
+              {event.venue?.city || event.group.city}, {event.venue?.state.toUpperCase() || event.group.state.toUpperCase()}
             </CityLabel>
           </CityContainer>
           <AttendeeContainer>
