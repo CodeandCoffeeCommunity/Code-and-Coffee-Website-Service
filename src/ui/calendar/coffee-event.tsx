@@ -313,7 +313,7 @@ export function CoffeeEvent({ event }: { event: MeetupEvent }) {
         <RsvpBreakContainer>
           <CityContainer>
             <CityLabel>
-              {event.venue.city}, {event.venue.state.toUpperCase()}
+              {event.venue?.city || event.group.city}, {event.venue?.state.toUpperCase() || event.group.state.toUpperCase()}
             </CityLabel>
           </CityContainer>
           <AttendeeContainer>
