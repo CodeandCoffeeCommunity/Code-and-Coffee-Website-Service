@@ -33,10 +33,20 @@ async function handleRequest(
   event: APIGatewayProxyEventV2
 ): Promise<APIGatewayProxyStructuredResultV2> {
   console.log("request received");
+  if (!isApiKeyValid(event)) {
+    return {
+      statusCode: 401,
+      body: JSON.stringify({
+        message: "Unauthorized",
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+  }
   const path = event.requestContext.http.path;
   let controller = undefined as undefined | Controller;
   for (const pathKey in router) {
-    console.log("pathKey", pathKey, new RegExp(`^${pathKey}$`).test(path));
     if (new RegExp(`^${pathKey}$`).test(path)) {
       controller = router[pathKey];
       break;
@@ -63,4 +73,18 @@ async function handleRequest(
       "Content-Type": "application/json",
     },
   };
+}
+
+const API_KEY_PATH = /^\/api\/.*/;
+
+/**
+ * Checks if an API key is needed, and if so, if it is valid. API Keys are required for all non cached requests.
+ * @param request The request to validate.
+ */
+function isApiKeyValid(request: APIGatewayProxyEventV2): boolean {
+  console.log("test", API_KEY_PATH.test(request.requestContext.http.path));
+  if (API_KEY_PATH.test(request.requestContext.http.path)) {
+    return request.headers?.["x-api-key"] === AppConf.apiKey;
+  }
+  return true;
 }

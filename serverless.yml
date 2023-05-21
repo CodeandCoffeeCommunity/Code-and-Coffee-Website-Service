@@ -36,6 +36,7 @@ functions:
       GOOGLE_CALENDAR_API_KEY: ${env:GOOGLE_CALENDAR_API_KEY}
       GOOGLE_CALENDAR_ID: ${env:GOOGLE_CALENDAR_ID}
       SETTINGS_HOST: ${env:SETTINGS_HOST}
+      API_KEY: ${env:API_KEY}
 
 resources:
   Description: Code and Coffee Service ${opt:stage}
