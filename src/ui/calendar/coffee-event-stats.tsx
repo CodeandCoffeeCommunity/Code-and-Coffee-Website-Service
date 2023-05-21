@@ -13,7 +13,6 @@ const StatsContainer = styled.div`
 `;
 
 export function CoffeeEventStats({ stats }: { stats: EventStats }) {
-  console.log(stats);
   return (
     <StatsContainer>
       <Stat>Events: {stats.totalEvents}</Stat>
