@@ -37,6 +37,9 @@ inputs:
   API_KEY:
     description: Key used to validate API requests
     required: true
+  SETTINGS_HOST:
+    description: Settings host
+    required: true
 
 runs:
   using: "composite"
