@@ -14,6 +14,7 @@ export const router: RouterMap = {
   "/info/events": chaptersController,
   "\\/info\\/chapter-icons\\/[A-Za-z-]+": chapterIconController,
   "/info/health": healthController,
+  "/api/health": healthController,
 };
 
 function healthController(): APIGatewayProxyStructuredResultV2 {
