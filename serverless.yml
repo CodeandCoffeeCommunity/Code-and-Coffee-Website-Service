@@ -13,6 +13,8 @@ provider:
   stackName: code-and-coffee-service-${opt:stage}
   httpApi:
     name: code-and-coffee-service-${opt:stage}
+  logs:
+    restApi: true
 
 package:
   individually: true
