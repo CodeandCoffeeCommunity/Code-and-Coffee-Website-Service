@@ -5,4 +5,5 @@ export const AppConf = {
   meetupApiHost: process.env.MEETUP_API_HOST,
   logsVerbose: (process.env.LOGS_VERBOSE || "").toUpperCase() === "TRUE",
   settingsHost: process.env.SETTINGS_HOST,
+  apiKey: process.env.API_KEY,
 };
