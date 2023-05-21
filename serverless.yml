@@ -65,18 +65,6 @@ resources:
                 - "*"
               AllowedMethods:
                 - GET
-    CloudfrontLogBucket:
-      Type: AWS::S3::Bucket
-      Properties:
-        BucketName: cnc-service-cloudfront-logs-${opt:stage}-${env:RANDOM_SEED}
-        CorsConfiguration:
-          CorsRules:
-            - AllowedOrigins:
-                - "*"
-              AllowedHeaders:
-                - "*"
-              AllowedMethods:
-                - GET
     WebResourcesBucketPolicy:
       Type: AWS::S3::BucketPolicy
       DeletionPolicy: Delete
@@ -116,10 +104,6 @@ resources:
             CachePolicyId: !Ref StandardCachePolicy
           Enabled: true
           HttpVersion: http2
-          Logging:
-            Bucket: cnc-service-cloudfront-logs-${opt:stage}-${env:RANDOM_SEED}.s3.amazonaws.com
-            IncludeCookies: false
-            Prefix: code-and-coffee-service-${opt:stage}
           ViewerCertificate:
             AcmCertificateArn: ${env:ACM_CERTIFICATE_ARN}
             SslSupportMethod: sni-only
@@ -172,7 +156,10 @@ resources:
         OriginRequestPolicyConfig:
           Name: StandardOriginRequestPolicy
           HeadersConfig:
-            HeaderBehavior: allViewer
+            HeaderBehavior: allViewerAndWhitelistCloudFront
+            Headers:
+              - Origin
+              - Host
           CookiesConfig:
             CookieBehavior: all
           QueryStringsConfig:
