@@ -79,9 +79,6 @@ resources:
               Resource: !Sub arn:aws:s3:::code-and-coffee-service-web-resources-${opt:stage}-${env:RANDOM_SEED}/*
     CloudFrontDistribution:
       Type: "AWS::CloudFront::Distribution"
-      DependsOn:
-        - WebResourcesBucketPolicy
-        - CloudfrontLogBucket
       Properties:
         DistributionConfig:
           Comment: code-and-coffee-service-${opt:stage}
