@@ -106,7 +106,7 @@ resources:
                 - HEAD
             - PathPattern: /api/*
               TargetOriginId: api-gateway
-              CachePolicyId: cachingDisabled
+              CachePolicyId: CachingDisabled
               ViewerProtocolPolicy: redirect-to-https
               AllowedMethods:
                 - HEAD
