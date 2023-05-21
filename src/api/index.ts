@@ -82,7 +82,7 @@ const API_KEY_PATH = /^\/api\/.*/;
  * @param request The request to validate.
  */
 function isApiKeyValid(request: APIGatewayProxyEventV2): boolean {
-  console.log("test", API_KEY_PATH.test(request.requestContext.http.path));
+  console.log('headers',JSON.stringify(request.headers));
   if (API_KEY_PATH.test(request.requestContext.http.path)) {
     return request.headers?.["x-api-key"] === AppConf.apiKey;
   }
