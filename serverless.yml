@@ -153,10 +153,11 @@ resources:
         OriginRequestPolicyConfig:
           Name: StandardOriginRequestPolicy
           HeadersConfig:
-            HeaderBehavior: allViewerAndWhitelistCloudFront
+            HeaderBehavior: whitelist
             Headers:
               - Origin
               - Host
+              - x-api-key
           CookiesConfig:
             CookieBehavior: all
           QueryStringsConfig:
