@@ -119,8 +119,7 @@ resources:
                 - HEAD
             - PathPattern: /api/*
               TargetOriginId: api-gateway
-              CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad
-              OriginRequestPolicyId: !Ref StandardOriginRequestPolicy
+              CachePolicyId: DisabledCachePolicy
               ViewerProtocolPolicy: redirect-to-https
               AllowedMethods:
                 - HEAD
@@ -147,18 +146,22 @@ resources:
               HeaderBehavior: none
             QueryStringsConfig:
               QueryStringBehavior: none
-    StandardOriginRequestPolicy:
-      Type: AWS::CloudFront::OriginRequestPolicy
+    DisabledCachePolicy:
+      Type: AWS::CloudFront::CachePolicy
       Properties:
-        OriginRequestPolicyConfig:
-          Name: StandardOriginRequestPolicy
-          HeadersConfig:
-            HeaderBehavior: whitelist
-            Headers:
-              - Origin
-              - Host
-              - x-api-key
-          CookiesConfig:
-            CookieBehavior: all
-          QueryStringsConfig:
-            QueryStringBehavior: all
+        CachePolicyConfig:
+          MinTTL: 0
+          DefaultTTL: 0
+          MaxTTL: 0
+          Name: code-and-coffee-service-disabled-cache-policy-${opt:stage}-${sls:instanceId}
+          ParametersInCacheKeyAndForwardedToOrigin:
+            CookiesConfig:
+              CookieBehavior: all
+            EnableAcceptEncodingBrotli: true
+            EnableAcceptEncodingGzip: true
+            HeadersConfig:
+              HeaderBehavior: whitelist
+              Headers:
+                - x-api-key
+            QueryStringsConfig:
+              QueryStringBehavior: all
