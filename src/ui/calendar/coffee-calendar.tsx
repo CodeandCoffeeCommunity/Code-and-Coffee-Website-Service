@@ -87,7 +87,6 @@ export function CoffeeCalendar({ height }: { height: number }) {
     function displayDialogListener(event: KeyboardEvent): void {
       if (event.code === "KeyI" && event.ctrlKey) {
         setShowStats(!showStats);
-        console.log("Key Pressed!", !showStats);
       }
     }
 

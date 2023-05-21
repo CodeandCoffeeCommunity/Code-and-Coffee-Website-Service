@@ -13,7 +13,6 @@ export async function handler(
   try {
     return await handleRequest(event);
   } catch (e) {
-    console.log(JSON.stringify(AppConf));
     console.error(`Internal server error: ${e}`);
     return {
       statusCode: 500,
@@ -82,8 +81,6 @@ const API_KEY_PATH = /^\/api\/.*/;
  * @param request The request to validate.
  */
 function isApiKeyValid(request: APIGatewayProxyEventV2): boolean {
-  console.log('headers',JSON.stringify(request.headers));
-  console.log('apiKey',AppConf.apiKey,request.headers?.["x-api-key"] === AppConf.apiKey);
   if (API_KEY_PATH.test(request.requestContext.http.path)) {
     return request.headers?.["x-api-key"] === AppConf.apiKey;
   }

@@ -30,8 +30,6 @@ export function registerReactWebComponent({
         {}
       );
 
-      console.log(attrs);
-
       this.root.render(
         <StyleSheetManager target={this.shadow}>
           <Component {...attrs} />
