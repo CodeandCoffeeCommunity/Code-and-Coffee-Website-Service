@@ -108,6 +108,7 @@ resources:
             - PathPattern: /api/*
               TargetOriginId: api-gateway
               CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad
+              OriginRequestPolicyId: !Ref StandardOriginRequestPolicy
               ViewerProtocolPolicy: redirect-to-https
               AllowedMethods:
                 - HEAD
@@ -134,3 +135,14 @@ resources:
               HeaderBehavior: none
             QueryStringsConfig:
               QueryStringBehavior: none
+    StandardOriginRequestPolicy:
+      Type: AWS::CloudFront::OriginRequestPolicy
+      Properties:
+        OriginRequestPolicyConfig:
+          Name: StandardOriginRequestPolicy
+          HeadersConfig:
+            HeaderBehavior: allViewerAndWhitelistCloudFront
+          CookiesConfig:
+            CookieBehavior: all
+          QueryStringsConfig:
+            QueryStringBehavior: all
