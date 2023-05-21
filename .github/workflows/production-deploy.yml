@@ -24,3 +24,4 @@ jobs:
           MEETUP_API_HOST: ${{ secrets.MEETUP_API_HOST }}
           STAGE: production
           SETTINGS_HOST: ${{ secrets.SETTINGS_HOST }}
+          API_KEY: ${{ secrets.API_KEY }}
