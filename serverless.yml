@@ -91,6 +91,9 @@ resources:
               Resource: !Sub arn:aws:s3:::code-and-coffee-service-web-resources-${opt:stage}-${env:RANDOM_SEED}/*
     CloudFrontDistribution:
       Type: "AWS::CloudFront::Distribution"
+      DependsOn:
+        - WebResourcesBucketPolicy
+        - CloudfrontLogBucket
       Properties:
         DistributionConfig:
           Comment: code-and-coffee-service-${opt:stage}
@@ -114,7 +117,7 @@ resources:
           Enabled: true
           HttpVersion: http2
           Logging:
-            Bucket: cnc-service-cloudfront-logs-${opt:stage}-${env:RANDOM_SEED}
+            Bucket: cnc-service-cloudfront-logs-${opt:stage}-${env:RANDOM_SEED}.s3.amazonaws.com
             IncludeCookies: false
             Prefix: code-and-coffee-service-${opt:stage}
           ViewerCertificate:
