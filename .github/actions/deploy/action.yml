@@ -88,7 +88,7 @@ runs:
         GOOGLE_API_HOST: ${{ inputs.GOOGLE_API_HOST }}
         MEETUP_API_HOST: ${{ inputs.MEETUP_API_HOST }}
         SETTINGS_HOST: ${{ inputs.SETTINGS_HOST }}
-        API_KEY: ${{ inputs.SETTINGS_HOST }}
+        API_KEY: ${{ inputs.API_KEY }}
     - name: Upload dist to web resources bucket
       shell: bash
       run: aws s3 sync dist s3://code-and-coffee-service-web-resources-${{ inputs.STAGE }}-${{ inputs.RANDOM_SEED }}
