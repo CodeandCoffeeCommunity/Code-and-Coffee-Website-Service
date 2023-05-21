@@ -141,7 +141,7 @@ resources:
         OriginRequestPolicyConfig:
           Name: StandardOriginRequestPolicy
           HeadersConfig:
-            HeaderBehavior: allViewerAndWhitelistCloudFront
+            HeaderBehavior: allViewer
           CookiesConfig:
             CookieBehavior: all
           QueryStringsConfig:
