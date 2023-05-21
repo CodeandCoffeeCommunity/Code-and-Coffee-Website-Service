@@ -36,7 +36,7 @@ async function handleRequest(
   const path = event.requestContext.http.path;
   let controller = undefined as undefined | Controller;
   for (const pathKey in router) {
-    console.log('pathKey',pathKey,new RegExp(`^${pathKey}$`).test(path))
+    console.log("pathKey", pathKey, new RegExp(`^${pathKey}$`).test(path));
     if (new RegExp(`^${pathKey}$`).test(path)) {
       controller = router[pathKey];
       break;

@@ -18,7 +18,7 @@ export type MeetupEvent = {
     address: string;
     city: string;
     state: string;
-  }|null;
+  } | null;
   dateTime: string;
   group: {
     id: string;
