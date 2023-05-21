@@ -11,9 +11,9 @@ export type Controller = (
   | Promise<APIGatewayProxyStructuredResultV2>;
 
 export const router: RouterMap = {
-  "/api/events": chaptersController,
-  "\\/api\\/chapter-icons\\/[A-Za-z-]+": chapterIconController,
-  "/api/health": healthController,
+  "/info/events": chaptersController,
+  "\\/info\\/chapter-icons\\/[A-Za-z-]+": chapterIconController,
+  "/info/health": healthController,
 };
 
 function healthController(): APIGatewayProxyStructuredResultV2 {

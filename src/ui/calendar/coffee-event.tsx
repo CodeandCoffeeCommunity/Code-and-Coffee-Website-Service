@@ -259,18 +259,18 @@ export function CoffeeEvent({ event }: { event: MeetupEvent }) {
   }
 
   useEffect(() => {
-    fetch(`${WebConf.rootHost}/api/chapter-icons/${event.group.urlname.toLowerCase()}`).then(
+    fetch(`${WebConf.rootHost}/info/chapter-icons/${event.group.urlname.toLowerCase()}`).then(
       (response) => {
         if (response.ok) {
           setIconImage(
             <CityIcon
-              src={`${WebConf.rootHost}/api/chapter-icons/${event.group.urlname.toLowerCase()}`}
+              src={`${WebConf.rootHost}/info/chapter-icons/${event.group.urlname.toLowerCase()}`}
               alt={`${event.group.city} Icon`}
             />
           );
           setSmallIconImage(
             <SmallCityIcon
-              src={`${WebConf.rootHost}/api/chapter-icons/${event.group.urlname.toLowerCase()}`}
+              src={`${WebConf.rootHost}/info/chapter-icons/${event.group.urlname.toLowerCase()}`}
               alt={`${event.group.city} Icon`}
             />
           );

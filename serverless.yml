@@ -85,7 +85,7 @@ resources:
               QueryString: false
             TargetOriginId: s3-origin
             ViewerProtocolPolicy: redirect-to-https
-            CachePolicyId: !Ref CloudFrontCachePolicy
+            CachePolicyId: !Ref StandardCachePolicy
           Enabled: true
           HttpVersion: http2
           ViewerCertificate:
@@ -93,13 +93,9 @@ resources:
             SslSupportMethod: sni-only
             MinimumProtocolVersion: TLSv1.2_2021
           CacheBehaviors:
-            - PathPattern: /api/*
+            - PathPattern: /info/*
               TargetOriginId: api-gateway
-              CachePolicyId: !Ref CloudFrontCachePolicy
-              ForwardedValues:
-                QueryString: false
-                Cookies:
-                  Forward: none
+              CachePolicyId: !Ref StandardCachePolicy
               ViewerProtocolPolicy: redirect-to-https
               AllowedMethods:
                 - GET
@@ -108,7 +104,18 @@ resources:
               CachedMethods:
                 - GET
                 - HEAD
-    CloudFrontCachePolicy:
+            - PathPattern: /api/*
+              TargetOriginId: api-gateway
+              CachePolicyId: cachingDisabled
+              ViewerProtocolPolicy: redirect-to-https
+              AllowedMethods:
+                - GET
+                - POST
+                - DELETE
+                - PUT
+                - HEAD
+                - OPTIONS
+    StandardCachePolicy:
       Type: AWS::CloudFront::CachePolicy
       Properties:
         CachePolicyConfig:
