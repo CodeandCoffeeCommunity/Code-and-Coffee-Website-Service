@@ -109,12 +109,13 @@ resources:
               CachePolicyId: cachingDisabled
               ViewerProtocolPolicy: redirect-to-https
               AllowedMethods:
-                - GET
-                - POST
-                - DELETE
-                - PUT
                 - HEAD
+                - DELETE
+                - POST
+                - GET
                 - OPTIONS
+                - PUT
+                - PATCH
     StandardCachePolicy:
       Type: AWS::CloudFront::CachePolicy
       Properties:
