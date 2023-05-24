@@ -45,8 +45,8 @@ functions:
       MEETUP_API_BASE_URL: ${env:MEETUP_API_BASE_URL}
       SETTINGS_BASE_URL: ${env:SETTINGS_BASE_URL}
       API_KEY: ${env:API_KEY}
-      GITHUB_API_BASE_URL: ${env:GITHUB_API_BASE_URL}
-      GITHUB_AUTH_KEY: ${env:GITHUB_AUTH_KEY}
+      GH_API_BASE_URL: ${env:GH_API_BASE_URL}
+      GH_AUTH_KEY: ${env:GH_AUTH_KEY}
       EMAIL_APP_URL: ${env:EMAIL_APP_URL}
 
 resources:
