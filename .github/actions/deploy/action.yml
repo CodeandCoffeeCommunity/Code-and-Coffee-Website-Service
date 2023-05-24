@@ -40,6 +40,15 @@ inputs:
   SETTINGS_HOST:
     description: Settings host
     required: true
+  GH_API_BASE_URL:
+    description: GitHub API base URL
+    required: true
+  GH_AUTH_KEY:
+    description: GitHub auth key
+    required: true
+  EMAIL_APP_URL:
+    description: Email app URL
+    required: true
 
 runs:
   using: "composite"
@@ -83,12 +92,12 @@ runs:
         ACM_CERTIFICATE_ARN: ${{ inputs.ACM_CERTIFICATE_ARN }}
         AWS_ACCESS_KEY_ID: ${{ inputs.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
-        GOOGLE_CALENDAR_API_KEY: ${{ inputs.GOOGLE_CALENDAR_API_KEY }}
-        GOOGLE_CALENDAR_ID: ${{ inputs.GOOGLE_CALENDAR_ID }}
-        GOOGLE_API_HOST: ${{ inputs.GOOGLE_API_HOST }}
         MEETUP_API_HOST: ${{ inputs.MEETUP_API_HOST }}
         SETTINGS_HOST: ${{ inputs.SETTINGS_HOST }}
         API_KEY: ${{ inputs.API_KEY }}
+        GH_API_BASE_URL: ${{ inputs.GITHUB_API_BASE_URL }}
+        GH_AUTH_KEY: ${{ inputs.GITHUB_AUTH_KEY }}
+        EMAIL_APP_URL: ${{ inputs.EMAIL_APP_URL }}
     - name: Upload dist to web resources bucket
       shell: bash
       run: aws s3 sync dist s3://code-and-coffee-service-web-resources-${{ inputs.STAGE }}-${{ inputs.RANDOM_SEED }}

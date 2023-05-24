@@ -2,7 +2,7 @@ import { APIGatewayProxyEventV2 } from "aws-lambda";
 import { APIGatewayProxyStructuredResultV2 } from "aws-lambda/trigger/api-gateway-proxy";
 import { MeetupEvent } from "./dao/meetup.dao";
 import { AppConf } from "./app-conf";
-import { Controller, router } from "./router";
+import { Controller, routes } from "./routes";
 import colors from "colors";
 
 export type EventsResponse = Array<MeetupEvent>;
@@ -44,10 +44,11 @@ async function handleRequest(
     };
   }
   const path = event.requestContext.http.path;
+  const method = event.requestContext.http.method.toUpperCase();
   let controller = undefined as undefined | Controller;
-  for (const pathKey in router) {
-    if (new RegExp(`^${pathKey}$`).test(path)) {
-      controller = router[pathKey];
+  for (const route of routes) {
+    if (method === route.method && new RegExp(`^${route.path}$`).test(path)) {
+      controller = route.controller;
       break;
     }
   }

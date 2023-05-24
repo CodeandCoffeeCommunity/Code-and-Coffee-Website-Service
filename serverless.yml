@@ -32,13 +32,22 @@ functions:
       - httpApi:
           path: /{proxy+}
           method: get
+      - httpApi:
+          path: /{proxy+}
+          method: post
+      - httpApi:
+          path: /{proxy+}
+          method: delete
+      - httpApi:
+          path: /{proxy+}
+          method: put
     environment:
-      GOOGLE_API_HOST: ${env:GOOGLE_API_HOST}
-      MEETUP_API_HOST: ${env:MEETUP_API_HOST}
-      GOOGLE_CALENDAR_API_KEY: ${env:GOOGLE_CALENDAR_API_KEY}
-      GOOGLE_CALENDAR_ID: ${env:GOOGLE_CALENDAR_ID}
-      SETTINGS_HOST: ${env:SETTINGS_HOST}
+      MEETUP_API_BASE_URL: ${env:MEETUP_API_BASE_URL}
+      SETTINGS_BASE_URL: ${env:SETTINGS_BASE_URL}
       API_KEY: ${env:API_KEY}
+      GITHUB_API_BASE_URL: ${env:GITHUB_API_BASE_URL}
+      GITHUB_AUTH_KEY: ${env:GITHUB_AUTH_KEY}
+      EMAIL_APP_URL: ${env:EMAIL_APP_URL}
 
 resources:
   Description: Code and Coffee Service ${opt:stage}
@@ -51,8 +60,8 @@ resources:
     HttpApiLogGroup:
       Type: AWS::Logs::LogGroup
       Properties:
-          LogGroupName: /aws/http-api/code-and-coffee-service-${opt:stage}
-          RetentionInDays: 7
+        LogGroupName: /aws/http-api/code-and-coffee-service-${opt:stage}
+        RetentionInDays: 7
     WebResourcesBucket:
       Type: AWS::S3::Bucket
       Properties:
