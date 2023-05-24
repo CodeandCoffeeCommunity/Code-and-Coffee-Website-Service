@@ -25,3 +25,6 @@ jobs:
           STAGE: production
           SETTINGS_HOST: ${{ secrets.SETTINGS_HOST }}
           API_KEY: ${{ secrets.API_KEY }}
+          GH_API_BASE_URL: ${{ secrets.GH_API_BASE_URL }}
+          GH_AUTH_KEY: ${{ secrets.GH_AUTH_KEY }}
+          EMAIL_APP_URL: ${{ secrets.EMAIL_APP_URL }}
