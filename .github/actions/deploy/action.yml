@@ -95,8 +95,8 @@ runs:
         MEETUP_API_BASE_URL: ${{ inputs.MEETUP_API_BASE_URL }}
         SETTINGS_BASE_URL: ${{ inputs.SETTINGS_BASE_URL }}
         API_KEY: ${{ inputs.API_KEY }}
-        GH_API_BASE_URL: ${{ inputs.GITHUB_API_BASE_URL }}
-        GH_AUTH_KEY: ${{ inputs.GITHUB_AUTH_KEY }}
+        GH_API_BASE_URL: ${{ inputs.GH_API_BASE_URL }}
+        GH_AUTH_KEY: ${{ inputs.GH_AUTH_KEY }}
         EMAIL_APP_URL: ${{ inputs.EMAIL_APP_URL }}
     - name: Upload dist to web resources bucket
       shell: bash
