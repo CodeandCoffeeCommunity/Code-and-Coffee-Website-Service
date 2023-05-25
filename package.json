@@ -26,6 +26,7 @@
     "@types/aws-lambda": "^8.10.111",
     "@types/jest": "^29.4.4",
     "@types/node": "^20.1.2",
+    "@types/nodemailer": "^6.4.8",
     "@types/react": "^18.0.28",
     "@types/styled-components": "^5.1.26",
     "@typescript-eslint/eslint-plugin": "^5.57.0",
@@ -48,6 +49,9 @@
     "chalk": "^5.2.0",
     "colors": "^1.4.0",
     "form-data": "^4.0.0",
+    "google-auth-library": "^8.8.0",
+    "googleapis": "^118.0.0",
+    "nodemailer": "^6.9.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "styled-components": "^5.3.9"

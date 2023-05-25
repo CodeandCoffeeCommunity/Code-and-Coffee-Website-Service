@@ -31,7 +31,7 @@ export async function chapterIconController(
   }
 }
 
-const chapterRegex = /(?<=\/api\/chapter-icons\/).*$/;
+const chapterRegex = /(?<=\/info\/chapter-icons\/).*$/;
 function extractChapter(path: string): string {
   const results = path.match(chapterRegex);
   if (results === null) {

@@ -18,7 +18,7 @@ export type MeetupEvent = {
     address: string;
     city: string;
     state: string;
-  }|null;
+  } | null;
   dateTime: string;
   group: {
     id: string;
@@ -55,7 +55,7 @@ export async function getMeetupEvents(
   const finalQuery = formQuery(chapters);
   const response = await request({
     name: "Meetup Event",
-    url: `${AppConf.meetupApiHost}/gql`,
+    url: `${AppConf.meetupApiBaseUrl}/gql`,
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: { query: finalQuery },

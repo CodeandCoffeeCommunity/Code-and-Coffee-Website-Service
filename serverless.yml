@@ -13,6 +13,8 @@ provider:
   stackName: code-and-coffee-service-${opt:stage}
   httpApi:
     name: code-and-coffee-service-${opt:stage}
+  logs:
+    restApi: true
 
 package:
   individually: true
@@ -30,16 +32,36 @@ functions:
       - httpApi:
           path: /{proxy+}
           method: get
+      - httpApi:
+          path: /{proxy+}
+          method: post
+      - httpApi:
+          path: /{proxy+}
+          method: delete
+      - httpApi:
+          path: /{proxy+}
+          method: put
     environment:
-      GOOGLE_API_HOST: ${env:GOOGLE_API_HOST}
-      MEETUP_API_HOST: ${env:MEETUP_API_HOST}
-      GOOGLE_CALENDAR_API_KEY: ${env:GOOGLE_CALENDAR_API_KEY}
-      GOOGLE_CALENDAR_ID: ${env:GOOGLE_CALENDAR_ID}
-      SETTINGS_HOST: ${env:SETTINGS_HOST}
+      MEETUP_API_BASE_URL: ${env:MEETUP_API_BASE_URL}
+      SETTINGS_BASE_URL: ${env:SETTINGS_BASE_URL}
+      API_KEY: ${env:API_KEY}
+      GH_API_BASE_URL: ${env:GH_API_BASE_URL}
+      GH_AUTH_KEY: ${env:GH_AUTH_KEY}
+      EMAIL_APP_URL: ${env:EMAIL_APP_URL}
 
 resources:
   Description: Code and Coffee Service ${opt:stage}
   Resources:
+    HttpApiStage:
+      Properties:
+        AccessLogSettings:
+          DestinationArn: !GetAtt HttpApiLogGroup.Arn
+          Format: '{"requestId":"$context.requestId","ip":"$context.identity.sourceIp","requestTime":"$context.requestTime","httpMethod":"$context.httpMethod","routeKey":"$context.routeKey","status":"$context.status","protocol":"$context.protocol","responseLength":"$context.responseLength"}'
+    HttpApiLogGroup:
+      Type: AWS::Logs::LogGroup
+      Properties:
+        LogGroupName: /aws/http-api/code-and-coffee-service-${opt:stage}
+        RetentionInDays: 7
     WebResourcesBucket:
       Type: AWS::S3::Bucket
       Properties:
@@ -85,7 +107,7 @@ resources:
               QueryString: false
             TargetOriginId: s3-origin
             ViewerProtocolPolicy: redirect-to-https
-            CachePolicyId: !Ref CloudFrontCachePolicy
+            CachePolicyId: !Ref StandardCachePolicy
           Enabled: true
           HttpVersion: http2
           ViewerCertificate:
@@ -93,13 +115,9 @@ resources:
             SslSupportMethod: sni-only
             MinimumProtocolVersion: TLSv1.2_2021
           CacheBehaviors:
-            - PathPattern: /api/*
+            - PathPattern: /info/*
               TargetOriginId: api-gateway
-              CachePolicyId: !Ref CloudFrontCachePolicy
-              ForwardedValues:
-                QueryString: false
-                Cookies:
-                  Forward: none
+              CachePolicyId: !Ref StandardCachePolicy
               ViewerProtocolPolicy: redirect-to-https
               AllowedMethods:
                 - GET
@@ -108,7 +126,20 @@ resources:
               CachedMethods:
                 - GET
                 - HEAD
-    CloudFrontCachePolicy:
+            - PathPattern: /api/*
+              TargetOriginId: api-gateway
+              CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad
+              OriginRequestPolicyId: !Ref StandardOriginRequestPolicy
+              ViewerProtocolPolicy: redirect-to-https
+              AllowedMethods:
+                - HEAD
+                - DELETE
+                - POST
+                - GET
+                - OPTIONS
+                - PUT
+                - PATCH
+    StandardCachePolicy:
       Type: AWS::CloudFront::CachePolicy
       Properties:
         CachePolicyConfig:
@@ -125,3 +156,16 @@ resources:
               HeaderBehavior: none
             QueryStringsConfig:
               QueryStringBehavior: none
+    StandardOriginRequestPolicy:
+      Type: AWS::CloudFront::OriginRequestPolicy
+      Properties:
+        OriginRequestPolicyConfig:
+          Name: StandardOriginRequestPolicy
+          HeadersConfig:
+            HeaderBehavior: allExcept
+            Headers:
+              - Host
+          CookiesConfig:
+            CookieBehavior: all
+          QueryStringsConfig:
+            QueryStringBehavior: all

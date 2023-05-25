@@ -9,6 +9,13 @@ export type Chapter = {
   meetupGroupUrlName: string;
 };
 
+export type NotificationSetting = {
+  name: string;
+  github: string;
+  email: Array<string>;
+  emailTitlePrepend: string;
+};
+
 /**
  * Get a list of all the Code and Coffee Chapters.
  */
@@ -16,7 +23,7 @@ export async function getChapters(): Promise<Chapter[]> {
   return (await (
     await request({
       name: "Chapters Setting",
-      url: `${AppConf.settingsHost}/chapters.json`,
+      url: `${AppConf.settingsBaseUrl}/chapters.json`,
       method: "GET",
     })
   ).json()) as Chapter[];
@@ -31,8 +38,23 @@ export async function getChapterIcon(chapter: string): Promise<ArrayBuffer> {
   return await (
     await request({
       name: "Chapter Icon",
-      url: `${AppConf.settingsHost}/chapter-icons/${chapter}.png`,
+      url: `${AppConf.settingsBaseUrl}/chapter-icons/${chapter}.png`,
       method: "GET",
     })
   ).arrayBuffer();
+}
+
+/**
+ * Get all the notification settings.
+ */
+export async function getNotificationSettings(): Promise<
+  Array<NotificationSetting>
+> {
+  return await (
+    await request({
+      name: "Notification Settings",
+      url: `${AppConf.settingsBaseUrl}/notifications.json`,
+      method: "GET",
+    })
+  ).json();
 }

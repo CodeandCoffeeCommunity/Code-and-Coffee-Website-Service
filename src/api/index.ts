@@ -2,7 +2,7 @@ import { APIGatewayProxyEventV2 } from "aws-lambda";
 import { APIGatewayProxyStructuredResultV2 } from "aws-lambda/trigger/api-gateway-proxy";
 import { MeetupEvent } from "./dao/meetup.dao";
 import { AppConf } from "./app-conf";
-import { Controller, router } from "./router";
+import { Controller, routes } from "./routes";
 import colors from "colors";
 
 export type EventsResponse = Array<MeetupEvent>;
@@ -13,7 +13,6 @@ export async function handler(
   try {
     return await handleRequest(event);
   } catch (e) {
-    console.log(JSON.stringify(AppConf));
     console.error(`Internal server error: ${e}`);
     return {
       statusCode: 500,
@@ -33,11 +32,23 @@ async function handleRequest(
   event: APIGatewayProxyEventV2
 ): Promise<APIGatewayProxyStructuredResultV2> {
   console.log("request received");
+  if (!isApiKeyValid(event)) {
+    return {
+      statusCode: 401,
+      body: JSON.stringify({
+        message: "Unauthorized",
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+  }
   const path = event.requestContext.http.path;
+  const method = event.requestContext.http.method.toUpperCase();
   let controller = undefined as undefined | Controller;
-  for (const pathKey in router) {
-    if (new RegExp(`^${pathKey}$`).test(path)) {
-      controller = router[pathKey];
+  for (const route of routes) {
+    if (method === route.method && new RegExp(`^${route.path}$`).test(path)) {
+      controller = route.controller;
       break;
     }
   }
@@ -62,4 +73,17 @@ async function handleRequest(
       "Content-Type": "application/json",
     },
   };
+}
+
+const API_KEY_PATH = /^\/api\/.*/;
+
+/**
+ * Checks if an API key is needed, and if so, if it is valid. API Keys are required for all non cached requests.
+ * @param request The request to validate.
+ */
+function isApiKeyValid(request: APIGatewayProxyEventV2): boolean {
+  if (API_KEY_PATH.test(request.requestContext.http.path)) {
+    return request.headers?.["x-api-key"] === AppConf.apiKey;
+  }
+  return true;
 }

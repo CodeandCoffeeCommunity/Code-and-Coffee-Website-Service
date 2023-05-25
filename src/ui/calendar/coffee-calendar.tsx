@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { CoffeeEvent } from "./coffee-event";
 import styled from "styled-components";
 import { getEvents } from "./coffee.dao";
+import { EventStats, getEventStats } from "./events.util";
+import { CoffeeEventStats } from "./coffee-event-stats";
 
 const CalendarContainer = styled.div`
   display: flex;
@@ -65,23 +67,39 @@ const EventHolder = styled.div`
 
 export function CoffeeCalendar({ height }: { height: number }) {
   const [coffeeEvents, setCoffeeEvents] = useState([] as Array<JSX.Element>);
+  const [showStats, setShowStats] = useState(false as boolean);
+  const [stats, setStats] = useState(undefined as undefined | EventStats);
 
   useEffect(() => {
     getEvents().then((events) => {
       const newCoffeeEvents = [] as Array<JSX.Element>;
-      console.log(events);
       for (const event of events) {
         if (event) {
           newCoffeeEvents.push(<CoffeeEvent event={event} key={event.id} />);
         }
       }
       setCoffeeEvents(newCoffeeEvents);
+      setStats(getEventStats(events));
     });
   }, []);
+
+  useEffect(() => {
+    function displayDialogListener(event: KeyboardEvent): void {
+      if (event.code === "KeyI" && event.ctrlKey) {
+        setShowStats(!showStats);
+      }
+    }
+
+    document.addEventListener("keydown", displayDialogListener);
+    return () => {
+      document.removeEventListener("keydown", displayDialogListener);
+    };
+  }, [showStats]);
 
   return (
     <CalendarContainer height={height}>
       <EventTitle>Events</EventTitle>
+      {showStats && stats && <CoffeeEventStats stats={stats} />}
       <EventHolder>{coffeeEvents}</EventHolder>
     </CalendarContainer>
   );
