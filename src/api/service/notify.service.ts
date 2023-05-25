@@ -21,7 +21,9 @@ export async function notify(notification: Notification): Promise<void> {
     await sendEmail({
       body: notification.message,
       recipient: channelSetting.email,
-      subject: channelSetting.emailTitlePrepend + notification.title,
+      subject: channelSetting.emailTitlePrepend
+        ? `${channelSetting.emailTitlePrepend}${notification.title}`
+        : notification.title,
     });
   }
   if (channelSetting.github) {
