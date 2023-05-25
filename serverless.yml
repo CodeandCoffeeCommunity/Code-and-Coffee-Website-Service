@@ -160,7 +160,7 @@ resources:
       Type: AWS::CloudFront::OriginRequestPolicy
       Properties:
         OriginRequestPolicyConfig:
-          Name: StandardOriginRequestPolicy
+          Name: StandardOriginRequestPolicy-${opt:stage}-${env:RANDOM_SEED}
           HeadersConfig:
             HeaderBehavior: allExcept
             Headers:
