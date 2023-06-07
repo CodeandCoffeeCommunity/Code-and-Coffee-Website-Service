@@ -25,6 +25,7 @@ package:
 functions:
   lambda:
     handler: build/bundle.handler
+    timeout: 30
     package:
       patterns:
         - "./build/bundle.cjs"
