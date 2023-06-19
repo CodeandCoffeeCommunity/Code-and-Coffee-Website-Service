@@ -93,6 +93,7 @@ runs:
         AWS_ACCESS_KEY_ID: ${{ inputs.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.AWS_SECRET_ACCESS_KEY }}
         MEETUP_API_BASE_URL: ${{ inputs.MEETUP_API_BASE_URL }}
+        PERMISSION_BOUNDARY_ARN: ${{ inputs.PERMISSION_BOUNDARY_ARN }}
         SETTINGS_BASE_URL: ${{ inputs.SETTINGS_BASE_URL }}
         API_KEY: ${{ inputs.API_KEY }}
         GH_API_BASE_URL: ${{ inputs.GH_API_BASE_URL }}
