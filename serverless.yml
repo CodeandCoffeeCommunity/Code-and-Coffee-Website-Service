@@ -11,6 +11,9 @@ provider:
   stage: ${opt:stage}
   region: us-east-1
   stackName: code-and-coffee-service-${opt:stage}
+  iam:
+    role:
+      permissionsBoundary: ${env:PERMISSION_BOUNDARY_ARN}
   httpApi:
     name: code-and-coffee-service-${opt:stage}
   logs:
