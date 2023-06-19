@@ -81,6 +81,8 @@ resources:
     WebResourcesBucketPolicy:
       Type: AWS::S3::BucketPolicy
       DeletionPolicy: Delete
+      DependsOn:
+        - WebResourcesBucket
       Properties:
         Bucket: code-and-coffee-service-web-resources-${opt:stage}-${env:RANDOM_SEED}
         PolicyDocument:
