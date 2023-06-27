@@ -18,9 +18,13 @@ When installed, run the following script to install.
 
 `npm install`
 
-To run the project locally, run the following script.
+The project has a series of Environment Variables that need to be set to run the project locally. These are stored in a file called `.env` in the root of the project. This file is not checked in to source control. You will need to create this file and populate it with the values in the `.env.template` file.
 
-`npm run serve`
+To run the project locally, run the following scripts in separate terminals.
+
+`npm run serve:ui` to run the UI  
+`npm run serve:api` to run the serverless api  
+`npm run mockoon-start` to run the mock api server
 
 ## Technologies
 
