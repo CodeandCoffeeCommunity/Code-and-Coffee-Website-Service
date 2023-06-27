@@ -88,6 +88,33 @@
       ],
       "enabled": true,
       "responseMode": null
+    },
+    {
+      "uuid": "ed90d3c2-6be8-4eac-ac5f-1f7d5c464c74",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "settings/chapters.json",
+      "responses": [
+        {
+          "uuid": "1c6889e8-8641-4466-8162-1649eb4eb53d",
+          "body": "[\r\n  {\r\n    \"name\": \"NoVA\",\r\n    \"meetupGroupUrlName\": \"nova-code-coffee\"\r\n  },\r\n  {\r\n    \"name\": \"Triangle\",\r\n    \"meetupGroupUrlName\": \"triangle-code-and-coffee\"\r\n  },\r\n  {\r\n    \"name\": \"Baltimore\",\r\n    \"meetupGroupUrlName\": \"baltimore-code-and-coffee\"\r\n  },\r\n  {\r\n    \"name\": \"New York\",\r\n    \"meetupGroupUrlName\": \"new-york-code-coffee\"\r\n  },\r\n  {\r\n    \"name\": \"Austin\",\r\n    \"meetupGroupUrlName\": \"austin-code-and-coffee\"\r\n  },\r\n  {\r\n    \"name\": \"Chicago\",\r\n    \"meetupGroupUrlName\": \"code-and-coffee-chicago\"\r\n  },\r\n  {\r\n    \"name\": \"Columbus\",\r\n    \"meetupGroupUrlName\": \"columbus-code-and-coffee\"\r\n  },\r\n  {\r\n    \"name\": \"St. Louis\",\r\n    \"meetupGroupUrlName\": \"code-and-coffee-st-louis\"\r\n  },\r\n  {\r\n    \"name\": \"Ventura\",\r\n    \"meetupGroupUrlName\": \"ventura-code-coffee\"\r\n  },\r\n  {\r\n    \"name\": \"Cincinnati\",\r\n    \"meetupGroupUrlName\": \"cincinnati-code-and-coffee\"\r\n  },\r\n  {\r\n    \"name\": \"Boston\",\r\n    \"meetupGroupUrlName\": \"boston-code-and-coffee\"\r\n  },\r\n  {\r\n    \"name\": \"Longview\",\r\n    \"meetupGroupUrlName\": \"longview-code-and-coffee\"\r\n  },\r\n  {\r\n    \"name\":\"Richmond\",\r\n    \"meetupGroupUrlName\": \"rva-code-coffee\"\r\n  },\r\n  {\r\n    \"name\":\"Milwaukee\",\r\n    \"meetupGroupUrlName\": \"milwaukee-code-and-coffee\"\r\n  },\r\n  {\r\n    \"name\":\"Houston\",\r\n    \"meetupGroupUrlName\": \"houston-code-and-coffee\"\r\n  },\r\n  {\r\n    \"name\":\"Frederick\",\r\n    \"meetupGroupUrlName\": \"frederick-code-and-coffee\"\r\n  },\r\n  {\r\n    \"name\":\"Dulles\",\r\n    \"meetupGroupUrlName\": \"dulles-code-coffee\"\r\n  },\r\n  {\r\n    \"name\":\"Chattanooga\",\r\n    \"meetupGroupUrlName\": \"nooga-code-coffee\"\r\n  },\r\n  {\r\n    \"name\":\"Alexandria\",\r\n    \"meetupGroupUrlName\": \"alexandria-code-coffee\"\r\n  },\r\n  {\r\n    \"name\":\"Atlanta\",\r\n    \"meetupGroupUrlName\": \"atlanta-metro-code-and-coffee\"\r\n  },\r\n  {\r\n    \"name\":\"DC\",\r\n    \"meetupGroupUrlName\": \"dc-code-coffee\"\r\n  },\r\n  {\r\n    \"name\":\"San Francisco\",\r\n    \"meetupGroupUrlName\": \"sf-code-coffee\"\r\n  },\r\n  {\r\n    \"name\":\"Seattle\",\r\n    \"meetupGroupUrlName\": \"seattle-code-and-coffee\"\r\n  }\r\n]",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "",
+          "headers": [],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
     }
   ],
   "rootChildren": [
@@ -102,6 +129,10 @@
     {
       "type": "route",
       "uuid": "dd278c3f-8920-411a-ac9d-3892a967685e"
+    },
+    {
+      "type": "route",
+      "uuid": "ed90d3c2-6be8-4eac-ac5f-1f7d5c464c74"
     }
   ],
   "proxyMode": false,

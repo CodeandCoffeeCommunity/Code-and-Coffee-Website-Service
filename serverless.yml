@@ -56,11 +56,6 @@ functions:
 resources:
   Description: Code and Coffee Service ${opt:stage}
   Resources:
-    HttpApiStage:
-      Properties:
-        AccessLogSettings:
-          DestinationArn: !GetAtt HttpApiLogGroup.Arn
-          Format: '{"requestId":"$context.requestId","ip":"$context.identity.sourceIp","requestTime":"$context.requestTime","httpMethod":"$context.httpMethod","routeKey":"$context.routeKey","status":"$context.status","protocol":"$context.protocol","responseLength":"$context.responseLength"}'
     HttpApiLogGroup:
       Type: AWS::Logs::LogGroup
       Properties:
