@@ -11,6 +11,9 @@ provider:
   stage: ${opt:stage}
   region: us-east-1
   stackName: code-and-coffee-service-${opt:stage}
+  iam:
+    role:
+      permissionsBoundary: ${env:PERMISSION_BOUNDARY_ARN}
   httpApi:
     name: code-and-coffee-service-${opt:stage}
   logs:
@@ -53,11 +56,6 @@ functions:
 resources:
   Description: Code and Coffee Service ${opt:stage}
   Resources:
-    HttpApiStage:
-      Properties:
-        AccessLogSettings:
-          DestinationArn: !GetAtt HttpApiLogGroup.Arn
-          Format: '{"requestId":"$context.requestId","ip":"$context.identity.sourceIp","requestTime":"$context.requestTime","httpMethod":"$context.httpMethod","routeKey":"$context.routeKey","status":"$context.status","protocol":"$context.protocol","responseLength":"$context.responseLength"}'
     HttpApiLogGroup:
       Type: AWS::Logs::LogGroup
       Properties:
@@ -75,18 +73,6 @@ resources:
                 - "*"
               AllowedMethods:
                 - GET
-    WebResourcesBucketPolicy:
-      Type: AWS::S3::BucketPolicy
-      DeletionPolicy: Delete
-      Properties:
-        Bucket: code-and-coffee-service-web-resources-${opt:stage}-${env:RANDOM_SEED}
-        PolicyDocument:
-          Statement:
-            - Sid: PublicReadGetObject
-              Effect: Allow
-              Principal: "*"
-              Action: "s3:GetObject"
-              Resource: !Sub arn:aws:s3:::code-and-coffee-service-web-resources-${opt:stage}-${env:RANDOM_SEED}/*
     CloudFrontDistribution:
       Type: "AWS::CloudFront::Distribution"
       Properties:
