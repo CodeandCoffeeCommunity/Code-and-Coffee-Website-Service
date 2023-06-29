@@ -22,9 +22,10 @@ The project has a series of Environment Variables that need to be set to run the
 
 To run the project locally, run the following scripts in separate terminals.
 
-`npm run serve:ui` to run the UI  
-`npm run serve:api` to run the serverless api  
-`npm run mockoon-start` to run the mock api server
+`npm run serve:ui` to run the UI.  
+`npm run serve:api` to run the serverless api. Needs to be rerun on each change to the api code.  
+`npm run mockoon-start` to run the mock api server.  
+`npm run nodemon:api` to build the api code and rebuild on changes.
 
 ## Technologies
 
