@@ -19,7 +19,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           ACM_CERTIFICATE_ARN: ${{ secrets.ACM_CERTIFICATE_ARN }}
           MEETUP_API_BASE_URL: ${{ secrets.MEETUP_API_BASE_URL }}
-          PERMISSION_BOUNDARY_ARN: ${{ secrets.PERMISSION_BOUNDARY_ARN }
+          PERMISSION_BOUNDARY_ARN: ${{ secrets.PERMISSION_BOUNDARY_ARN }}
           STAGE: production
           SETTINGS_BASE_URL: ${{ secrets.SETTINGS_BASE_URL }}
           API_KEY: ${{ secrets.API_KEY }}
